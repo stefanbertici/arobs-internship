@@ -7,14 +7,14 @@ public class Robot extends Thread {
     private int x;
     private int y;
     private int robotId;
-    private boolean isAlive;
+    private boolean isRobotAlive;
 
     public Robot(Playground playground, int x, int y, int robotId) {
         this.playground = playground;
         this.x = x;
         this.y = y;
         this.robotId = robotId;
-        this.isAlive = true;
+        this.isRobotAlive = true;
     }
 
     public int getX() {
@@ -30,7 +30,11 @@ public class Robot extends Thread {
     }
 
     public synchronized void destroy() {
-        isAlive = false;
+        isRobotAlive = false;
+    }
+
+    public synchronized boolean isRobotAlive() {
+        return isRobotAlive;
     }
 
     @Override
@@ -39,27 +43,29 @@ public class Robot extends Thread {
         int previousX = x;
         int previousY = y;
 
-        while (isAlive) {
+        while (isRobotAlive) {
             try {
                 sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            if (x == previousX && y == previousY) {
+            while (x == previousX && y == previousY) {
                 x = random.nextInt(playground.getTableSize());
                 y = random.nextInt(playground.getTableSize());
             }
 
             Robot robotOnNewSpot = playground.whoIsThere(x, y);
 
-            if (isAlive && robotOnNewSpot != null && robotOnNewSpot != this) {
-                System.out.println("ROBOT id = " + robotId + " and ROBOT id = " + robotOnNewSpot.getRobotId() + " DESTROY each other on " + "x:" + x + " y:" + y);
-                robotOnNewSpot.destroy();
-                this.destroy();
-                playground.clearSpot(x, y);
-                playground.clearSpot(previousX, previousY);
-            } else if (isAlive && (x != previousX || y != previousY)){
+            if (robotOnNewSpot != null) {
+                if (this.isRobotAlive() && robotOnNewSpot.isRobotAlive()) {
+                    System.out.println("ROBOT id = " + robotId + " and ROBOT id = " + robotOnNewSpot.getRobotId() + " DESTROYED each other on " + "x:" + x + " y:" + y);
+                    robotOnNewSpot.destroy();
+                    this.destroy();
+                    playground.clearSpot(x, y);
+                    playground.clearSpot(previousX, previousY);
+                }
+            } else if (this.isRobotAlive()) {
                 playground.moveRobot(previousX, previousY, x, y);
                 System.out.println("Robot id = " + robotId + " moves from x:" + previousX + " y:" + previousY + " to " + "x:" + x + " y:" + y);
             }
@@ -67,5 +73,9 @@ public class Robot extends Thread {
             previousX = x;
             previousY = y;
         }
+
+        // robots sometimes make another move while being destroyed.
+        // this clears that spot
+        playground.clearSpot(x, y);
     }
 }
