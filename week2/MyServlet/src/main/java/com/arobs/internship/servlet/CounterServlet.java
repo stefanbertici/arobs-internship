@@ -14,7 +14,6 @@ public class CounterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
-        int count = (int) req.getServletContext().getAttribute("counter");
-        out.println("Request counter: " + count);
+        out.println("Request counter: " + req.getServletContext().getAttribute("counter"));
     }
 }

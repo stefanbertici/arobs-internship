@@ -5,6 +5,7 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @WebListener
 public class RequestListener implements ServletRequestListener {
@@ -15,7 +16,9 @@ public class RequestListener implements ServletRequestListener {
 
         if (!request.getServletPath().equals("/counter")) {
             ServletContext context = event.getServletContext();
-            context.setAttribute("counter", (int) context.getAttribute("counter") + 1);
+            AtomicInteger count = ((AtomicInteger) context.getAttribute("counter"));
+            count.getAndIncrement();
+            context.setAttribute("counter", count);
         }
     }
 }
