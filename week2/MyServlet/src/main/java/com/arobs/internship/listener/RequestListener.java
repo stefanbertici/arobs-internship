@@ -18,7 +18,6 @@ public class RequestListener implements ServletRequestListener {
             ServletContext context = event.getServletContext();
             AtomicInteger count = ((AtomicInteger) context.getAttribute("counter"));
             count.getAndIncrement();
-            context.setAttribute("counter", count);
         }
     }
 }
