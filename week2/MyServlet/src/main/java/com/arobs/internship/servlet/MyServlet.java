@@ -1,42 +1,90 @@
 package com.arobs.internship.servlet;
 
-import javax.servlet.ServletException;
+import com.arobs.internship.repository.InMemoryPeopleRepository;
+
+import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.Map;
 
 @WebServlet(name = "loginServlet", urlPatterns = "/login")
 public class MyServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
 
+        printLoginForm(out);
+    }
+
+    private void printLoginForm(PrintWriter out) {
         out.println("""
-                    <h1>Hello from GET! Please log in.</h1>
-                    
+                <html>
+                    <h1>Hello from GET! Enter your name and the secret password.</h1>
+                                    
                     <form name="loginForm" action="./login" method="POST">
-                        Name: <input type="text" name="name"/> <br/>
-                        Password: <input type="password" name="password"/> <br/>
+                        Your name:       <input type="text" name="name"/> <br/>
+                        Secret password: <input type="password" name="password"/> <br/>
                         <input type="submit" value="Submit"/>
                     </form>
-                    """);
+                </html>
+                """);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html");
+        PrintWriter out = resp.getWriter();
+        ServletContext context = req.getServletContext();
+        InMemoryPeopleRepository peopleRepository = (InMemoryPeopleRepository) context.getAttribute("InMemoryPeopleRepository");
+
+        loginResult(out, req, peopleRepository);
+    }
+
+    private void loginResult(PrintWriter out, HttpServletRequest req, InMemoryPeopleRepository peopleRepository) {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
-        resp.setContentType("text/html");
 
-        boolean isSuccessful = !name.isEmpty() && password.equals("HelloWorld");
+        String successfulOutput = ("""
+                <h1>Hello %s from POST!</h1>
+                <h2>You know the password! Have a cookie :)</h2>
+                """).formatted(name);
+        String failedOutput = ("""
+                <h1>Hello %s from POST!</h1>
+                <h2>You don't know the password! No cookie for you this time :(</h2>
+                """).formatted(name);
 
-        PrintWriter out = resp.getWriter();
-        out.println("<h1>Hello from POST!</h1>\n" +
-                    "<h2>Logged in = " + isSuccessful + "</h2>");
+        boolean isSuccessful = !name.isBlank() && password.equals("HelloWorld");
+        if (isSuccessful) {
+            out.println(successfulOutput);
+            peopleRepository.add(name);
+        } else {
+            out.println(failedOutput);
+        }
+
+        printCookiesHallOfFame(out, peopleRepository.getAll());
+    }
+
+    private void printCookiesHallOfFame(PrintWriter out, Map<String, Integer> people) {
+        out.println("""
+                <html>
+                    <h2>Cookies hall of fame:</h2>
+                     <ul>""");
+
+        people.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEach(e -> out.println("<li>" + e.getKey() + " got " + e.getValue() + "</li>"));
+
+        out.println("""
+                    </ul>
+                </html>
+                    """);
     }
 }

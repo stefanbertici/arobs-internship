@@ -1,5 +1,6 @@
 com\arobs\internship\filter\EmptyParamFilter.class
 com\arobs\internship\listener\AppListener.class
+com\arobs\internship\repository\InMemoryPeopleRepository.class
 com\arobs\internship\servlet\MyServlet.class
 com\arobs\internship\listener\RequestListener.class
 com\arobs\internship\servlet\CounterServlet.class
