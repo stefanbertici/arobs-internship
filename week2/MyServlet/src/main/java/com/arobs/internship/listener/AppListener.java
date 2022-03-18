@@ -14,6 +14,6 @@ public class AppListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
         context.setAttribute("counter", new AtomicInteger(0));
-        context.setAttribute("InMemoryPeopleRepository", new InMemoryPeopleRepository());
+        context.setAttribute("people", new InMemoryPeopleRepository());
     }
 }

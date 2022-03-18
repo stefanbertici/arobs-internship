@@ -1,6 +1,8 @@
 package com.arobs.internship.servlet;
 
 import com.arobs.internship.repository.InMemoryPeopleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebServlet;
@@ -15,15 +17,18 @@ import java.util.Map;
 @WebServlet(name = "loginServlet", urlPatterns = "/login")
 public class MyServlet extends HttpServlet {
 
+    private static final Logger logger = LoggerFactory.getLogger(MyServlet.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("doGet was called.");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
         printLoginForm(out);
     }
 
-    private void printLoginForm(PrintWriter out) {
+   private void printLoginForm(PrintWriter out) {
         out.println("""
                 <html>
                     <h1>Hello from GET! Enter your name and the secret password.</h1>
@@ -42,7 +47,7 @@ public class MyServlet extends HttpServlet {
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
         ServletContext context = req.getServletContext();
-        InMemoryPeopleRepository peopleRepository = (InMemoryPeopleRepository) context.getAttribute("InMemoryPeopleRepository");
+        InMemoryPeopleRepository peopleRepository = (InMemoryPeopleRepository) context.getAttribute("people");
 
         loginResult(out, req, peopleRepository);
     }
@@ -50,7 +55,6 @@ public class MyServlet extends HttpServlet {
     private void loginResult(PrintWriter out, HttpServletRequest req, InMemoryPeopleRepository peopleRepository) {
         String name = req.getParameter("name");
         String password = req.getParameter("password");
-
         String successfulOutput = ("""
                 <h1>Hello %s from POST!</h1>
                 <h2>You know the password! Have a cookie :)</h2>

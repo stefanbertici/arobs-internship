@@ -22,7 +22,8 @@ public class EmptyParamFilter implements Filter {
                     password != null && password.matches("[A-Za-z0-9]{1,15}")) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
-                servletResponse.getWriter().println("Missing or incorrect inputs!");
+                RequestDispatcher dispatcher = httpRequest.getRequestDispatcher("/wronginput.jsp");
+                dispatcher.forward(servletRequest, servletResponse);
             }
         } else {
             filterChain.doFilter(servletRequest, servletResponse);
