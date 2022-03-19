@@ -21,14 +21,14 @@ public class MyServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        logger.info("doGet was called.");
+        logger.info(" \"/login\" doGet was called by " + req.getRemoteAddr());
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
         printLoginForm(out);
     }
 
-   private void printLoginForm(PrintWriter out) {
+    private void printLoginForm(PrintWriter out) {
         out.println("""
                 <html>
                     <h1>Hello from GET! Enter your name and the secret password.</h1>
