@@ -1,0 +1,4 @@
+jdbc_url=jdbc:mysql://localhost:3306/sql_test
+username=student
+password=student1234!
+maximumPoolSize=3
