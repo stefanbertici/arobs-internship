@@ -6,9 +6,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 public class MusifyApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(MusifyApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(MusifyApplication.class, args);
+    }
 }
