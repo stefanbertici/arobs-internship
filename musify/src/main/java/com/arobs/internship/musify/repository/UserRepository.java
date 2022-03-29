@@ -53,4 +53,20 @@ public class UserRepository {
 
         return keyHolder.getKey().intValue();
     }
+
+    public int updateUser(User user) {
+        return jdbcTemplate.update("""
+                        UPDATE users
+                        SET 
+                            first_name = ?,
+                            last_name = ?,
+                            email = ?,
+                            encrypted_password = ?,
+                            country_of_origin = ?,
+                            role = ?,
+                            status = ?
+                        WHERE id = ?""",
+                user.getFirstName(), user.getLastName(), user.getEmail(), user.getEncryptedPassword(),
+                user.getCountryOfOrigin(), user.getRole(), user.getStatus(), user.getId());
+    }
 }

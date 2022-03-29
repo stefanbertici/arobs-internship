@@ -46,13 +46,27 @@ public class UserService {
     }
 
     public UserViewDTO addUser(UserDTO userDTO) {
-        String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         User user = userMapper.toEntity(userDTO);
+        String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         int id = userRepository.addUser(user);
         user.setId(id);
 
         return userMapper.toViewDto(user);
+    }
+
+    public UserViewDTO updateUser(int id, UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
+        user.setEncryptedPassword(encryptedPassword);
+        user.setId(id);
+
+        int updatedRows = userRepository.updateUser(user);
+        if (updatedRows == 1) {
+            return userMapper.toViewDto(user);
+        } else {
+            throw new ResourceNotFoundException("User with id " + id + " not found.");
+        }
     }
 
     private String getEncryptedPassword(String password) {

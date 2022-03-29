@@ -39,4 +39,13 @@ public class UserController {
     public UserViewDTO addUser(@RequestBody UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
+
+    @PutMapping("/user/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
+        try {
+            return new ResponseEntity<>(userService.updateUser(id, userDTO), HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
