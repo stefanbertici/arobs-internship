@@ -57,7 +57,7 @@ public class UserRepository {
     public int updateUser(User user) {
         return jdbcTemplate.update("""
                         UPDATE users
-                        SET 
+                        SET
                             first_name = ?,
                             last_name = ?,
                             email = ?,
