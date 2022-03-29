@@ -1,32 +1,34 @@
-package com.arobs.internship.musify.model;
+package com.arobs.internship.musify.dto;
 
-public class User {
+public class UserDTO {
     private Integer id;
     private String firstName;
     private String lastName;
     private String email;
-    private String encryptedPassword;
+    private String password;
     private String countryOfOrigin;
     private String role;
     private String status;
 
-    public User(int id, String firstName, String lastName, String email,
-                String encryptedPassword, String countryOfOrigin, String role, String status) {
+    public UserDTO() {
+    }
+
+    public UserDTO(Integer id, String firstName, String lastName, String email, String password, String countryOfOrigin, String role, String status) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.encryptedPassword = encryptedPassword;
+        this.password = password;
         this.countryOfOrigin = countryOfOrigin;
         this.role = role;
         this.status = status;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,12 +56,12 @@ public class User {
         this.email = email;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getCountryOfOrigin() {
@@ -86,18 +88,14 @@ public class User {
         this.status = status;
     }
 
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
-
     @Override
     public String toString() {
-        return "User{" +
+        return "UserDTO{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", encryptedPassword='" + encryptedPassword + '\'' +
+                ", password='" + password + '\'' +
                 ", countryOfOrigin='" + countryOfOrigin + '\'' +
                 ", role='" + role + '\'' +
                 ", status='" + status + '\'' +
