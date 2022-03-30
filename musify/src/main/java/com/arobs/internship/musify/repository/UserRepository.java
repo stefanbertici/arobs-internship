@@ -26,7 +26,17 @@ public class UserRepository {
     }
 
     public User getUserById(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id = " + id, new UserRowMapper());
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id = ?", new UserRowMapper(), id);
+
+        if (users.size() == 1) {
+            return users.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public User getUserByEmail(String email) {
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE email = ?", new UserRowMapper(), email);
 
         if (users.size() == 1) {
             return users.get(0);

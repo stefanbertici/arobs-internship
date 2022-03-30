@@ -1,7 +1,10 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.UserDTO;
+import com.arobs.internship.musify.dto.UserLoginDTO;
 import com.arobs.internship.musify.dto.UserViewDTO;
+import com.arobs.internship.musify.exception.EmailAlreadyRegisteredException;
+import com.arobs.internship.musify.exception.IncorrectEmailOrPasswordException;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
@@ -36,23 +39,40 @@ public class UserService {
     }
 
     public UserViewDTO getUserById(int id) {
-         User user = userRepository.getUserById(id);
+        User user = userRepository.getUserById(id);
 
-         if (user != null) {
-             return userMapper.toViewDto(user);
-         } else {
-             throw new ResourceNotFoundException("User with id " + id + " not found.");
-         }
+        if (user != null) {
+            return userMapper.toViewDto(user);
+        } else {
+            throw new ResourceNotFoundException("User with id " + id + " not found.");
+        }
     }
 
-    public UserViewDTO addUser(UserDTO userDTO) {
+    public UserViewDTO registerUser(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
+        User userWithGivenEmailInRepository = userRepository.getUserByEmail(user.getEmail());
+
+        if (userWithGivenEmailInRepository != null) {
+            throw new EmailAlreadyRegisteredException("Email " + user.getEmail() + " is already registered.");
+        }
+
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         int id = userRepository.addUser(user);
         user.setId(id);
 
         return userMapper.toViewDto(user);
+    }
+
+    public UserViewDTO loginUser(UserLoginDTO userLoginDTO) {
+        User user = userRepository.getUserByEmail(userLoginDTO.getEmail());
+        String encryptedInputPassword = getEncryptedPassword(userLoginDTO.getPassword());
+
+        if (user != null && user.getEncryptedPassword().equals(encryptedInputPassword)) {
+            return userMapper.toViewDto(user);
+        } else {
+            throw new IncorrectEmailOrPasswordException("Incorrect email or password.");
+        }
     }
 
     public UserViewDTO updateUser(int id, UserDTO userDTO) {

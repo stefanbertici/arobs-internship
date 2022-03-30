@@ -1,7 +1,10 @@
 package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.UserDTO;
+import com.arobs.internship.musify.dto.UserLoginDTO;
 import com.arobs.internship.musify.dto.UserViewDTO;
+import com.arobs.internship.musify.exception.EmailAlreadyRegisteredException;
+import com.arobs.internship.musify.exception.IncorrectEmailOrPasswordException;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +34,26 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 
-    @PostMapping("/user")
-    public UserViewDTO addUser(@RequestBody UserDTO userDTO) {
-        return userService.addUser(userDTO);
+    @PostMapping("/user/register")
+    public ResponseEntity<?> addUser(@RequestBody UserDTO userDTO) {
+        try {
+            return new ResponseEntity<>(userService.registerUser(userDTO), HttpStatus.OK);
+        } catch (EmailAlreadyRegisteredException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
+        try {
+            return new ResponseEntity<>(userService.loginUser(userLoginDTO), HttpStatus.OK);
+        } catch (IncorrectEmailOrPasswordException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+        }
     }
 
     @PutMapping("/user/{id}")
@@ -45,7 +61,7 @@ public class UserController {
         try {
             return new ResponseEntity<>(userService.updateUser(id, userDTO), HttpStatus.OK);
         } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
         }
     }
 }
