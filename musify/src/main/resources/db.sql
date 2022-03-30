@@ -29,6 +29,15 @@ CREATE TABLE users (
 	PRIMARY KEY (id)
   );
   
+  CREATE TABLE alternative_song_titles (
+	id INT NOT NULL AUTO_INCREMENT,
+	song_id INT,
+	alternative_title VARCHAR(45),
+	PRIMARY KEY (id),
+    FOREIGN KEY (song_id)
+		REFERENCES songs(id)
+  );
+  
   CREATE TABLE albums (
 	id INT NOT NULL AUTO_INCREMENT,
 	title VARCHAR(45),
@@ -46,3 +55,93 @@ CREATE TABLE users (
 	type VARCHAR(45),
 	PRIMARY KEY (id)
   );
+  
+  CREATE TABLE bands (
+	id INT NOT NULL AUTO_INCREMENT,
+	artist_id INT,
+	band_name VARCHAR(45),
+    location VARCHAR(45),
+	PRIMARY KEY (id),
+    FOREIGN KEY (artist_id)
+		REFERENCES artists(id)
+  );
+  
+  CREATE TABLE persons (
+	id INT NOT NULL AUTO_INCREMENT,
+	artist_id INT,
+	first_name VARCHAR(45),
+    last_name VARCHAR(45),
+    stage_name VARCHAR(45),
+    birthday DATE,
+	PRIMARY KEY (id),
+    FOREIGN KEY (artist_id)
+		REFERENCES artists(id)
+  );
+  
+   CREATE TABLE playlists_songs (
+	id INT NOT NULL AUTO_INCREMENT,
+	playlist_id INT,
+	song_id INT,
+	PRIMARY KEY (id),
+    FOREIGN KEY (playlist_id)
+		REFERENCES playlists(id),
+	FOREIGN KEY (song_id)
+		REFERENCES songs(id)
+  );
+  
+  CREATE TABLE albums_songs (
+	id INT NOT NULL AUTO_INCREMENT,
+	album_id INT,
+	song_id INT,
+	PRIMARY KEY (id),
+    FOREIGN KEY (album_id)
+		REFERENCES albums(id),
+	FOREIGN KEY (song_id)
+		REFERENCES songs(id)
+  );
+  
+  CREATE TABLE albums_artists (
+	id INT NOT NULL AUTO_INCREMENT,
+	album_id INT,
+	artist_id INT,
+	PRIMARY KEY (id),
+    FOREIGN KEY (album_id)
+		REFERENCES albums(id),
+	FOREIGN KEY (artist_id)
+		REFERENCES artists(id)
+  );
+  
+  CREATE TABLE artists_songs (
+	id INT NOT NULL AUTO_INCREMENT,
+	artist_id INT,
+	song_id INT,
+	PRIMARY KEY (id),
+    FOREIGN KEY (artist_id)
+		REFERENCES artists(id),
+	FOREIGN KEY (song_id)
+		REFERENCES songs(id)
+  );
+  
+  CREATE TABLE bands_persons (
+	id INT NOT NULL AUTO_INCREMENT,
+	band_id INT,
+	person_id INT,
+	PRIMARY KEY (id),
+    FOREIGN KEY (band_id)
+		REFERENCES bands(id),
+	FOREIGN KEY (person_id)
+		REFERENCES persons(id)
+  );
+  
+  CREATE TABLE users_playlists (
+	id INT NOT NULL AUTO_INCREMENT,
+	user_id INT,
+	playlist_id INT,
+	PRIMARY KEY (id),
+    FOREIGN KEY (user_id)
+		REFERENCES users(id),
+	FOREIGN KEY (playlist_id)
+		REFERENCES playlists(id)
+  );
+  
+  
