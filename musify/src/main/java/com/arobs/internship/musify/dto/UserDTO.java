@@ -1,35 +1,25 @@
 package com.arobs.internship.musify.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class UserDTO {
-    private Integer id;
     private String firstName;
     private String lastName;
+    @NotBlank(message = "Email cannot be blank")
     private String email;
+    @NotBlank(message = "Password cannot be blank")
     private String password;
-    private String countryOfOrigin;
-    private String role;
-    private String status;
+    private String country;
 
     public UserDTO() {
     }
 
-    public UserDTO(Integer id, String firstName, String lastName, String email, String password, String countryOfOrigin, String role, String status) {
-        this.id = id;
+    public UserDTO(String firstName, String lastName, String email, String password, String country) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.countryOfOrigin = countryOfOrigin;
-        this.role = role;
-        this.status = status;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+        this.country = country;
     }
 
     public String getFirstName() {
@@ -64,41 +54,22 @@ public class UserDTO {
         this.password = password;
     }
 
-    public String getCountryOfOrigin() {
-        return countryOfOrigin;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryOfOrigin(String countryOfOrigin) {
-        this.countryOfOrigin = countryOfOrigin;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Override
     public String toString() {
         return "UserDTO{" +
-                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", countryOfOrigin='" + countryOfOrigin + '\'' +
-                ", role='" + role + '\'' +
-                ", status='" + status + '\'' +
+                ", country='" + country + '\'' +
                 '}';
     }
 }

@@ -1,5 +1,6 @@
 package com.arobs.internship.musify.repository;
 
+import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +23,13 @@ public class UserRepository {
     }
 
     public List<User> getAllUsers() {
-        return jdbcTemplate.query("SELECT * FROM users", new UserRowMapper());
+        List<User> users = jdbcTemplate.query("SELECT * FROM users", new UserRowMapper());;
+
+        if (users.size() == 0) {
+            throw new ResourceNotFoundException("No users exist at this moment");
+        } else {
+            return users;
+        }
     }
 
     public User getUserById(int id) {
@@ -31,7 +38,7 @@ public class UserRepository {
         if (users.size() == 1) {
             return users.get(0);
         } else {
-            return null;
+            throw new ResourceNotFoundException("User with id = " + id + " does not exist");
         }
     }
 
@@ -47,7 +54,7 @@ public class UserRepository {
 
     public int addUser(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String query = ("INSERT INTO users (first_name, last_name, email, encrypted_password, country_of_origin, role, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        String query = ("INSERT INTO users (first_name, last_name, email, encrypted_password, country, role, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -55,7 +62,7 @@ public class UserRepository {
             ps.setString(2, user.getLastName());
             ps.setString(3, user.getEmail());
             ps.setString(4, user.getEncryptedPassword());
-            ps.setString(5, user.getCountryOfOrigin());
+            ps.setString(5, user.getCountry());
             ps.setString(6, user.getRole());
             ps.setString(7, user.getStatus());
             return ps;
@@ -64,19 +71,23 @@ public class UserRepository {
         return keyHolder.getKey().intValue();
     }
 
-    public int updateUser(User user) {
-        return jdbcTemplate.update("""
+    public void updateUser(User user) {
+        int updatedRows = jdbcTemplate.update("""
                         UPDATE users
                         SET
                             first_name = ?,
                             last_name = ?,
                             email = ?,
                             encrypted_password = ?,
-                            country_of_origin = ?,
+                            country = ?,
                             role = ?,
                             status = ?
                         WHERE id = ?""",
                 user.getFirstName(), user.getLastName(), user.getEmail(), user.getEncryptedPassword(),
-                user.getCountryOfOrigin(), user.getRole(), user.getStatus(), user.getId());
+                user.getCountry(), user.getRole(), user.getStatus(), user.getId());
+
+        if (updatedRows == 0) {
+            throw new ResourceNotFoundException("User with id = " + user.getId() + " does not exist");
+        }
     }
 }

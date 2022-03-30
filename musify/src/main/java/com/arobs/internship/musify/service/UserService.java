@@ -3,9 +3,7 @@ package com.arobs.internship.musify.service;
 import com.arobs.internship.musify.dto.UserDTO;
 import com.arobs.internship.musify.dto.UserLoginDTO;
 import com.arobs.internship.musify.dto.UserViewDTO;
-import com.arobs.internship.musify.exception.EmailAlreadyRegisteredException;
-import com.arobs.internship.musify.exception.IncorrectEmailOrPasswordException;
-import com.arobs.internship.musify.exception.ResourceNotFoundException;
+import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,6 @@ public class UserService {
 
     public List<UserViewDTO> getAllUsers() {
         List<User> users = userRepository.getAllUsers();
-
         return users
                 .stream()
                 .map(userMapper::toViewDto)
@@ -40,24 +37,20 @@ public class UserService {
 
     public UserViewDTO getUserById(int id) {
         User user = userRepository.getUserById(id);
-
-        if (user != null) {
-            return userMapper.toViewDto(user);
-        } else {
-            throw new ResourceNotFoundException("User with id " + id + " not found.");
-        }
+        return userMapper.toViewDto(user);
     }
 
     public UserViewDTO registerUser(UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO);
-        User userWithGivenEmailInRepository = userRepository.getUserByEmail(user.getEmail());
-
+        User userWithGivenEmailInRepository = userRepository.getUserByEmail(userDTO.getEmail());
         if (userWithGivenEmailInRepository != null) {
-            throw new EmailAlreadyRegisteredException("Email " + user.getEmail() + " is already registered.");
+            throw new IllegalArgumentException("Email " + userDTO.getEmail() + " is already registered");
         }
 
+        User user = userMapper.toEntity(userDTO);
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
+        user.setRole("user");
+        user.setStatus("active");
         int id = userRepository.addUser(user);
         user.setId(id);
 
@@ -71,7 +64,7 @@ public class UserService {
         if (user != null && user.getEncryptedPassword().equals(encryptedInputPassword)) {
             return userMapper.toViewDto(user);
         } else {
-            throw new IncorrectEmailOrPasswordException("Incorrect email or password.");
+            throw new UnauthorizedException("Incorrect email or password");
         }
     }
 
@@ -80,13 +73,9 @@ public class UserService {
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setId(id);
+        userRepository.updateUser(user);
 
-        int updatedRows = userRepository.updateUser(user);
-        if (updatedRows == 1) {
-            return userMapper.toViewDto(user);
-        } else {
-            throw new ResourceNotFoundException("User with id " + id + " not found.");
-        }
+        return userMapper.toViewDto(user);
     }
 
     private String getEncryptedPassword(String password) {

@@ -4,7 +4,7 @@ CREATE TABLE users (
 	last_name VARCHAR(45),
 	email VARCHAR(45),
 	encrypted_password VARCHAR(45),
-	country_of_origin VARCHAR(45),
+	country VARCHAR(45),
 	role VARCHAR(45),
 	status VARCHAR(45),
 	PRIMARY KEY (id)
@@ -50,8 +50,8 @@ CREATE TABLE users (
   
   CREATE TABLE artists (
 	id INT NOT NULL AUTO_INCREMENT,
-	activity_start_date DATE,
-	activity_end_date DATE,
+	activity_start_date VARCHAR(45),
+	activity_end_date VARCHAR(45),
 	type VARCHAR(45),
 	PRIMARY KEY (id)
   );
@@ -82,6 +82,7 @@ CREATE TABLE users (
 	id INT NOT NULL AUTO_INCREMENT,
 	playlist_id INT,
 	song_id INT,
+    song_number INT,
 	PRIMARY KEY (id),
     FOREIGN KEY (playlist_id)
 		REFERENCES playlists(id),

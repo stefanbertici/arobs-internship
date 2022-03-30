@@ -1,7 +1,11 @@
 package com.arobs.internship.musify.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class UserLoginDTO {
+    @NotBlank(message = "Email cannot be blank")
     private String email;
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     public UserLoginDTO() {

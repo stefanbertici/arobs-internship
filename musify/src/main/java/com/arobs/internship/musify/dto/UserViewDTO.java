@@ -6,20 +6,20 @@ public class UserViewDTO {
     private String lastName;
     private String fullName;
     private String email;
-    private String countryOfOrigin;
+    private String country;
     private String role;
     private String status;
 
     public UserViewDTO() {
     }
 
-    public UserViewDTO(Integer id, String firstName, String lastName, String fullName, String email, String countryOfOrigin, String role, String status) {
+    public UserViewDTO(Integer id, String firstName, String lastName, String fullName, String email, String country, String role, String status) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.fullName = fullName;
         this.email = email;
-        this.countryOfOrigin = countryOfOrigin;
+        this.country = country;
         this.role = role;
         this.status = status;
     }
@@ -64,12 +64,12 @@ public class UserViewDTO {
         this.email = email;
     }
 
-    public String getCountryOfOrigin() {
-        return countryOfOrigin;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryOfOrigin(String countryOfOrigin) {
-        this.countryOfOrigin = countryOfOrigin;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getRole() {
@@ -96,7 +96,7 @@ public class UserViewDTO {
                 ", lastName='" + lastName + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
-                ", countryOfOrigin='" + countryOfOrigin + '\'' +
+                ", country='" + country + '\'' +
                 ", role='" + role + '\'' +
                 ", status='" + status + '\'' +
                 '}';

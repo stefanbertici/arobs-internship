@@ -6,18 +6,18 @@ public class User {
     private String lastName;
     private String email;
     private String encryptedPassword;
-    private String countryOfOrigin;
+    private String country;
     private String role;
     private String status;
 
     public User(int id, String firstName, String lastName, String email,
-                String encryptedPassword, String countryOfOrigin, String role, String status) {
+                String encryptedPassword, String country, String role, String status) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.encryptedPassword = encryptedPassword;
-        this.countryOfOrigin = countryOfOrigin;
+        this.country = country;
         this.role = role;
         this.status = status;
     }
@@ -62,12 +62,12 @@ public class User {
         this.encryptedPassword = encryptedPassword;
     }
 
-    public String getCountryOfOrigin() {
-        return countryOfOrigin;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryOfOrigin(String countryOfOrigin) {
-        this.countryOfOrigin = countryOfOrigin;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getRole() {
@@ -98,7 +98,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", encryptedPassword='" + encryptedPassword + '\'' +
-                ", countryOfOrigin='" + countryOfOrigin + '\'' +
+                ", country='" + country + '\'' +
                 ", role='" + role + '\'' +
                 ", status='" + status + '\'' +
                 '}';
