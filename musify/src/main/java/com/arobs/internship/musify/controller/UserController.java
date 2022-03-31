@@ -41,14 +41,28 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<UserViewDTO> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
-        UserViewDTO user = userService.loginUser(userLoginDTO);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+        String token = userService.loginUser(userLoginDTO);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
+
+    // placeholder "/user/logout"
 
     @PutMapping("/user/{id}")
     public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
         UserViewDTO user = userService.updateUser(id, userDTO);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{id}/promote")
+    public ResponseEntity<UserViewDTO> promoteUser(@PathVariable int id) {
+        UserViewDTO user = userService.updateUserRole(id, "PROMOTE");
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{id}/demote")
+    public ResponseEntity<UserViewDTO> demoteUser(@PathVariable int id) {
+        UserViewDTO user = userService.updateUserRole(id, "DEMOTE");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

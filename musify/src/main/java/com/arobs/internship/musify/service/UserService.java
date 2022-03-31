@@ -6,6 +6,7 @@ import com.arobs.internship.musify.dto.UserViewDTO;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
+import com.arobs.internship.musify.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,12 +58,13 @@ public class UserService {
         return userMapper.toViewDto(user);
     }
 
-    public UserViewDTO loginUser(UserLoginDTO userLoginDTO) {
+    public String loginUser(UserLoginDTO userLoginDTO) {
         User user = userRepository.getUserByEmail(userLoginDTO.getEmail());
         String encryptedInputPassword = getEncryptedPassword(userLoginDTO.getPassword());
 
         if (user != null && user.getEncryptedPassword().equals(encryptedInputPassword)) {
-            return userMapper.toViewDto(user);
+            //return userMapper.toViewDto(user);
+            return JwtUtils.generateToken(user.getId(), user.getEmail(), user.getRole());
         } else {
             throw new UnauthorizedException("Incorrect email or password");
         }
@@ -73,6 +75,30 @@ public class UserService {
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setId(id);
+        userRepository.updateUser(user);
+
+        return userMapper.toViewDto(user);
+    }
+
+    public UserViewDTO updateUserRole(int id, String operation) {
+        String currentUserRole = JwtUtils.getCurrentUserRole();
+        Integer currentUserId = JwtUtils.getCurrentUserId();
+        String newRole = "";
+
+        if (!currentUserRole.equals("admin")) {
+            throw new UnauthorizedException("Only admins can modify user roles");
+        } else if (currentUserId == id) {
+            throw new UnauthorizedException("You cannot modify your own role");
+        }
+
+        if (operation.equals("PROMOTE")) {
+            newRole = "admin";
+        } else if (operation.equals("DEMOTE")) {
+            newRole = "user";
+        }
+
+        User user = userRepository.getUserById(id);
+        user.setRole(newRole);
         userRepository.updateUser(user);
 
         return userMapper.toViewDto(user);
