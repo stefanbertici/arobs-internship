@@ -45,10 +45,9 @@ public class UserController {
         String token = userService.loginUser(userLoginDTO);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
-
-    // TODO
+    
     @PostMapping("/user/logout")
-    public ResponseEntity<String> logout(@RequestHeader(name = "Authorization") String header) {
+    public ResponseEntity<String> logout(@RequestHeader(name = "Authorization") String header) { // 'Authorization: Bearer tokenString'
         String response = userService.logoutUser(header);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

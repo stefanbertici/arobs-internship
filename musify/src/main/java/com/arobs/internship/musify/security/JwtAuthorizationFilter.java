@@ -1,5 +1,6 @@
 package com.arobs.internship.musify.security;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,7 +44,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(req, res);
     }
 
-    // Reads the JWT from the Authorization header, and then uses JWT to validate the token
+    // uses JWT to validate the token
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
         if (token != null) {
             Map<String, Object> userInfo = JwtUtils.validateToken(token);
