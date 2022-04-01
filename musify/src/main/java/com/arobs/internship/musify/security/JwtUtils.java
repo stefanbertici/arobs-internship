@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JwtUtils {
-    private static String signatureSecret = "myMusifyApp2022";
-    private static String issuer = "musify";
+    private static final String signatureSecret = "myMusifyApp2022";
+    private static final String issuer = "musify";
 
     public static String generateToken(int id, String email, String role) {
         Algorithm algorithm = Algorithm.HMAC256(signatureSecret);
@@ -54,6 +54,10 @@ public class JwtUtils {
         userInfo.put("role", role);
 
         return userInfo;
+    }
+
+    public static String extractTokenFromHeader(String header) {
+        return header.replaceAll("Bearer ", "").trim();
     }
 
     public static Integer getCurrentUserId() {

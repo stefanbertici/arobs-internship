@@ -46,7 +46,12 @@ public class UserController {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    // placeholder "/user/logout"
+    // TODO
+    @PostMapping("/user/logout")
+    public ResponseEntity<String> logout(@RequestHeader(name = "Authorization") String header) {
+        String response = userService.logoutUser(header);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @PutMapping("/user/{id}")
     public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {

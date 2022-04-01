@@ -1,5 +1,6 @@
 package com.arobs.internship.musify.exception;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -25,6 +26,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Illegal argument: " + e);
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    // TODO
+    @ExceptionHandler(TokenExpiredException.class)
+    protected ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException e) {
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, e.getMessage());
+        log.error("Token expired: " + e);
+
+        return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(UnauthorizedException.class)

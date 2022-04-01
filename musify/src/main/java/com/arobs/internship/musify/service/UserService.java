@@ -6,6 +6,7 @@ import com.arobs.internship.musify.dto.UserViewDTO;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
+import com.arobs.internship.musify.security.InMemoryTokenBlacklist;
 import com.arobs.internship.musify.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final InMemoryTokenBlacklist inMemoryTokenBlacklist;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, InMemoryTokenBlacklist inMemoryTokenBlacklist) {
         this.userRepository = userRepository;
+        this.inMemoryTokenBlacklist = inMemoryTokenBlacklist;
         this.userMapper = new UserMapperImpl();
     }
 
@@ -68,6 +71,12 @@ public class UserService {
         } else {
             throw new UnauthorizedException("Incorrect email or password");
         }
+    }
+
+    public String logoutUser(String header) {
+        String token = JwtUtils.extractTokenFromHeader(header);
+        inMemoryTokenBlacklist.blacklist(token);
+        return "Logout successful";
     }
 
     public UserViewDTO updateUser(int id, UserDTO userDTO) {
