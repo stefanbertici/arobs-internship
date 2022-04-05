@@ -6,43 +6,30 @@ import java.util.Set;
 
 @Entity
 @Table(name = "bands")
-public class Band extends Artist{
+public class Band{
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idBand;
+    private Integer id;
     @Column(name = "band_name")
     private String bandName;
     private String location;
-
-    @OneToOne
-    @JoinColumn(name = "artist_id")
-    private Artist artist;
+    @Column(name = "activity_start_date")
+    private String activityStartDate;
+    @Column(name = "activity_end_date")
+    private String activityEndDate;
 
     @ManyToMany
-    @JoinTable(name = "bands_persons",
+    @JoinTable(name = "bands_artists",
             joinColumns = { @JoinColumn(name = "band_id") },
-            inverseJoinColumns = { @JoinColumn(name = "person_id") })
-    private final Set<Person> persons = new HashSet<>();
+            inverseJoinColumns = { @JoinColumn(name = "artist_id") })
+    private final Set<Artist> artists = new HashSet<>();
 
-    public Band() {
+    public Integer getId() {
+        return id;
     }
 
-    public Band(String bandName, String location, String startDate, String endDate) {
-        this.bandName = bandName;
-        this.location = location;
-        super.setStartDate(startDate);
-        super.setEndDate(endDate);
-    }
-
-    public void addPerson(Person person) {
-        this.persons.add(person);
-        person.getBands().add(this);
-    }
-
-    public void removePerson(Person person) {
-        this.persons.remove(person);
-        person.getBands().remove(this);
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getBandName() {
@@ -59,5 +46,31 @@ public class Band extends Artist{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getActivityStartDate() {
+        return activityStartDate;
+    }
+
+    public void setActivityStartDate(String activityStartDate) {
+        this.activityStartDate = activityStartDate;
+    }
+
+    public String getActivityEndDate() {
+        return activityEndDate;
+    }
+
+    public void setActivityEndDate(String activityEndDate) {
+        this.activityEndDate = activityEndDate;
+    }
+
+    public void addArtist(Artist artist) {
+        this.artists.add(artist);
+        artist.getBands().add(this);
+    }
+
+    public void removeArtist(Artist artist) {
+        this.artists.remove(artist);
+        artist.getBands().remove(this);
     }
 }
