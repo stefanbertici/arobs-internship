@@ -1,10 +1,13 @@
 package com.arobs.internship.musify.model;
 
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Set;
 
+@NamedQueries({
+        @NamedQuery(name = "findAllArtists", query = "from Artist"),
+        @NamedQuery(name = "findArtistById", query = "from Artist where id = :id")
+})
 @Entity
 @Table(name = "artists")
 public class Artist {
@@ -23,8 +26,14 @@ public class Artist {
     @Column(name = "activity_end_date")
     private String activityEndDate;
 
-    @ManyToMany(mappedBy = "artists")
+    @ManyToMany()
+    @JoinTable(name = "bands_artists",
+            joinColumns = { @JoinColumn(name = "artist_id") },
+            inverseJoinColumns = { @JoinColumn(name = "band_id") })
     private Set<Band> bands;
+
+    public Artist() {
+    }
 
     public Integer getId() {
         return id;
@@ -84,5 +93,19 @@ public class Artist {
 
     public Set<Band> getBands() {
         return bands;
+    }
+
+    public void setBands(Set<Band> bands) {
+        this.bands = bands;
+    }
+
+    public void addBand(Band band) {
+        this.bands.add(band);
+        band.getArtists().add(this);
+    }
+
+    public void removeBand(Band band) {
+        this.bands.remove(band);
+        band.getArtists().remove(this);
     }
 }

@@ -1,9 +1,12 @@
 package com.arobs.internship.musify.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
+@NamedQueries({
+        @NamedQuery(name = "findAllBands", query = "from Band"),
+        @NamedQuery(name = "findBandById", query = "from Band where id = :id")
+})
 @Entity
 @Table(name = "bands")
 public class Band{
@@ -18,11 +21,11 @@ public class Band{
     @Column(name = "activity_end_date")
     private String activityEndDate;
 
-    @ManyToMany
-    @JoinTable(name = "bands_artists",
-            joinColumns = { @JoinColumn(name = "band_id") },
-            inverseJoinColumns = { @JoinColumn(name = "artist_id") })
-    private final Set<Artist> artists = new HashSet<>();
+    @ManyToMany(mappedBy = "bands")
+    private Set<Artist> artists;
+
+    public Band() {
+    }
 
     public Integer getId() {
         return id;
@@ -64,13 +67,11 @@ public class Band{
         this.activityEndDate = activityEndDate;
     }
 
-    public void addArtist(Artist artist) {
-        this.artists.add(artist);
-        artist.getBands().add(this);
+    public Set<Artist> getArtists() {
+        return artists;
     }
 
-    public void removeArtist(Artist artist) {
-        this.artists.remove(artist);
-        artist.getBands().remove(this);
+    public void setArtists(Set<Artist> artists) {
+        this.artists = artists;
     }
 }
