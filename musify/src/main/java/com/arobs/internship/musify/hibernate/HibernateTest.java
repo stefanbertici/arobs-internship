@@ -17,6 +17,7 @@ public class HibernateTest {
         session.getTransaction().commit();
         session.close();
 
+        // called only at the end of program
         HibernateUtil.shutdown();
     }
 }

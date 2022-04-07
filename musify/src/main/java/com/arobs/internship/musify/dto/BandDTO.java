@@ -1,31 +1,21 @@
-package com.arobs.internship.musify.model;
+package com.arobs.internship.musify.dto;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
-@NamedQueries({
-        @NamedQuery(name = "findAllBands", query = "from Band"),
-        @NamedQuery(name = "findBandById", query = "from Band where id = :id")
-})
-@Entity
-@Table(name = "bands")
-public class Band{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class BandDTO {
     private Integer id;
-    @Column(name = "band_name")
     private String bandName;
     private String location;
-    @Column(name = "activity_start_date")
     private String activityStartDate;
-    @Column(name = "activity_end_date")
     private String activityEndDate;
 
-    @ManyToMany(mappedBy = "bands")
-    private Set<Artist> artists = new HashSet<>();
+    public BandDTO() {
+    }
 
-    public Band() {
+    public BandDTO(Integer id, String bandName, String location, String activityStartDate, String activityEndDate) {
+        this.id = id;
+        this.bandName = bandName;
+        this.location = location;
+        this.activityStartDate = activityStartDate;
+        this.activityEndDate = activityEndDate;
     }
 
     public Integer getId() {
@@ -68,11 +58,14 @@ public class Band{
         this.activityEndDate = activityEndDate;
     }
 
-    public Set<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(Set<Artist> artists) {
-        this.artists = artists;
+    @Override
+    public String toString() {
+        return "BandDTO{" +
+                "id=" + id +
+                ", bandName='" + bandName + '\'' +
+                ", location='" + location + '\'' +
+                ", activityStartDate='" + activityStartDate + '\'' +
+                ", activityEndDate='" + activityEndDate + '\'' +
+                '}';
     }
 }

@@ -1,15 +1,20 @@
 package com.arobs.internship.musify.hibernate;
 
+import com.arobs.internship.musify.dto.BandDTO;
 import com.arobs.internship.musify.model.Band;
+import com.arobs.internship.musify.service.BandMapper;
+import com.arobs.internship.musify.service.BandMapperImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateBandRepository {
+    private final BandMapper bandMapper = new BandMapperImpl();
 
-    public List<Band> getAllBands() {
+    public List<BandDTO> getAllBands() {
         Transaction transaction = null;
         List<Band> bands = null;
 
@@ -26,14 +31,16 @@ public class HibernateBandRepository {
             }
 
             e.printStackTrace();
-        } finally {
-            HibernateUtil.shutdown();
+            return null;
         }
 
-        return bands;
+        return bands
+                .stream()
+                .map(bandMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Band getBandById(int id) {
+    public BandDTO getBandById(int id) {
         Transaction transaction = null;
         Band band = null;
 
@@ -50,21 +57,22 @@ public class HibernateBandRepository {
                 transaction.rollback();
             }
 
-            System.out.println(e.getMessage());
-        } finally {
-            HibernateUtil.shutdown();
+            e.printStackTrace();
+            return null;
         }
 
-        return band;
+        return bandMapper.toDto(band);
     }
 
-    public void addBand(Band band) {
+    public int createBand(BandDTO bandDTO) {
         Transaction transaction = null;
+        int id;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            session.save(band);
+            Band band = bandMapper.toEntity(bandDTO);
+            id = (Integer) session.save(band);
 
             transaction.commit();
         } catch (Exception e) {
@@ -72,25 +80,27 @@ public class HibernateBandRepository {
                 transaction.rollback();
             }
 
-            System.out.println(e.getMessage());
-        } finally {
-            HibernateUtil.shutdown();
+            e.printStackTrace();
+            return -1;
         }
+
+        return id;
     }
 
-    public void updateBand(Band band) {
+    public void updateBand(BandDTO bandDTO) {
         Transaction transaction = null;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            Band bandToUpdate = session.get(Band.class, band.getId());
+            Band bandWithGivenId = session.get(Band.class, bandDTO.getId());
 
-            if (bandToUpdate == null) {
-                return;
-            }
+            bandWithGivenId.setBandName(bandDTO.getBandName());
+            bandWithGivenId.setLocation(bandDTO.getLocation());
+            bandWithGivenId.setActivityStartDate(bandDTO.getActivityStartDate());
+            bandWithGivenId.setActivityEndDate(bandDTO.getActivityEndDate());
 
-            session.update(band);
+            session.update(bandWithGivenId);
 
             transaction.commit();
         } catch (Exception e) {
@@ -98,9 +108,7 @@ public class HibernateBandRepository {
                 transaction.rollback();
             }
 
-            System.out.println(e.getMessage());
-        } finally {
-            HibernateUtil.shutdown();
+            e.printStackTrace();
         }
     }
 
@@ -122,8 +130,6 @@ public class HibernateBandRepository {
             }
 
             e.printStackTrace();
-        } finally {
-            HibernateUtil.shutdown();
         }
     }
 }

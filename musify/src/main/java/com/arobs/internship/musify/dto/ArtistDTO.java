@@ -1,39 +1,27 @@
-package com.arobs.internship.musify.model;
+package com.arobs.internship.musify.dto;
 
-import javax.persistence.*;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-@NamedQueries({
-        @NamedQuery(name = "findAllArtists", query = "from Artist"),
-        @NamedQuery(name = "findArtistById", query = "from Artist where id = :id")
-})
-@Entity
-@Table(name = "artists")
-public class Artist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ArtistDTO {
     private Integer id;
-    @Column(name = "first_name")
     private String firstName;
-    @Column(name = "last_name")
     private String lastName;
-    @Column(name = "stage_name")
     private String stageName;
     private Date birthday;
-    @Column(name = "activity_start_date")
     private String activityStartDate;
-    @Column(name = "activity_end_date")
     private String activityEndDate;
 
-    @ManyToMany()
-    @JoinTable(name = "bands_artists",
-            joinColumns = { @JoinColumn(name = "artist_id") },
-            inverseJoinColumns = { @JoinColumn(name = "band_id") })
-    private Set<Band> bands = new HashSet<>();
+    public ArtistDTO() {
+    }
 
-    public Artist() {
+    public ArtistDTO(Integer id, String firstName, String lastName, String stageName, Date birthday, String activityStartDate, String activityEndDate) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.stageName = stageName;
+        this.birthday = birthday;
+        this.activityStartDate = activityStartDate;
+        this.activityEndDate = activityEndDate;
     }
 
     public Integer getId() {
@@ -92,21 +80,16 @@ public class Artist {
         this.activityEndDate = activityEndDate;
     }
 
-    public Set<Band> getBands() {
-        return bands;
-    }
-
-    public void setBands(Set<Band> bands) {
-        this.bands = bands;
-    }
-
-    public void addBand(Band band) {
-        this.bands.add(band);
-        band.getArtists().add(this);
-    }
-
-    public void removeBand(Band band) {
-        this.bands.remove(band);
-        band.getArtists().remove(this);
+    @Override
+    public String toString() {
+        return "ArtistDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", stageName='" + stageName + '\'' +
+                ", birthday=" + birthday +
+                ", activityStartDate='" + activityStartDate + '\'' +
+                ", activityEndDate='" + activityEndDate + '\'' +
+                '}';
     }
 }

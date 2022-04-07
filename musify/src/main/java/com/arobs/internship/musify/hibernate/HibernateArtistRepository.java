@@ -1,17 +1,23 @@
 package com.arobs.internship.musify.hibernate;
 
+import com.arobs.internship.musify.dto.ArtistDTO;
 import com.arobs.internship.musify.model.Artist;
+import com.arobs.internship.musify.model.Band;
+import com.arobs.internship.musify.service.ArtistMapper;
+import com.arobs.internship.musify.service.ArtistMapperImpl;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateArtistRepository {
+    private final ArtistMapper artistMapper = new ArtistMapperImpl();
 
-    public List<Artist> getAllArtists() {
+    public List<ArtistDTO> getAllArtists() {
         Transaction transaction = null;
-        List<Artist> artists = null;
+        List<Artist> artists;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -26,16 +32,17 @@ public class HibernateArtistRepository {
             }
 
             e.printStackTrace();
-        } finally {
-            HibernateUtil.shutdown();
+            return null;
         }
 
-        return artists;
+        return artists.stream()
+                .map(artistMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public Artist getArtistById(int id) {
+    public ArtistDTO getArtistById(int id) {
         Transaction transaction = null;
-        Artist artist = null;
+        Artist artist;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -50,48 +57,22 @@ public class HibernateArtistRepository {
                 transaction.rollback();
             }
 
-            System.out.println(e.getMessage());
-        } finally {
-            HibernateUtil.shutdown();
+            e.printStackTrace();
+            return null;
         }
 
-        return artist;
+        return artistMapper.toDto(artist);
     }
 
-    public void addArtist(Artist artist) {
+    public int createArtist(ArtistDTO artistDTO) {
         Transaction transaction = null;
+        int id;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            session.save(artist);
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-
-            System.out.println(e.getMessage());
-        } finally {
-            HibernateUtil.shutdown();
-        }
-    }
-
-    public void updateArtist(Artist artist) {
-        Transaction transaction = null;
-
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
-            /*Artist artistToUpdate = session.get(Artist.class, artist.getId());
-
-            if (artistToUpdate == null) {
-                return;
-            }*/
-
-            session.saveOrUpdate(artist);
-            //session.update(artist);
+            Artist artist = artistMapper.toEntity(artistDTO);
+            id = (Integer) session.save(artist);
 
             transaction.commit();
         } catch (Exception e) {
@@ -100,8 +81,36 @@ public class HibernateArtistRepository {
             }
 
             e.printStackTrace();
-        } finally {
-            HibernateUtil.shutdown();
+            return -1;
+        }
+
+        return id;
+    }
+
+    public void updateArtist(ArtistDTO artistDTO) {
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Artist artistWithGivenId = session.get(Artist.class, artistDTO.getId());
+
+            artistWithGivenId.setFirstName(artistDTO.getFirstName());
+            artistWithGivenId.setLastName(artistDTO.getLastName());
+            artistWithGivenId.setStageName(artistDTO.getStageName());
+            artistWithGivenId.setBirthday(artistDTO.getBirthday());
+            artistWithGivenId.setActivityStartDate(artistDTO.getActivityStartDate());
+            artistWithGivenId.setActivityEndDate(artistDTO.getActivityEndDate());
+
+            session.update(artistWithGivenId);
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+
+            e.printStackTrace();
         }
     }
 
@@ -123,8 +132,56 @@ public class HibernateArtistRepository {
             }
 
             e.printStackTrace();
-        } finally {
-            HibernateUtil.shutdown();
+        }
+    }
+
+    public void addBand(int artistId, int bandId) {
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Artist artist = session.get(Artist.class, artistId);
+            Band band = session.get(Band.class, bandId);
+            if (artist == null || band == null) {
+                return;
+            }
+
+            artist.addBand(band);
+            session.persist(artist);
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+
+            e.printStackTrace();
+        }
+    }
+
+    public void removeBand(int artistId, int bandId) {
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Artist artist = session.get(Artist.class, artistId);
+            Band band = session.get(Band.class, bandId);
+            if (artist == null || band == null) {
+                return;
+            }
+
+            artist.removeBand(band);
+            session.persist(artist);
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+
+            e.printStackTrace();
         }
     }
 }
