@@ -1,10 +1,10 @@
-package com.arobs.internship.musify.hibernate;
+package com.arobs.internship.storage.hibernate;
 
 import com.arobs.internship.musify.dto.ArtistDTO;
+import com.arobs.internship.musify.mapper.ArtistMapperImpl;
 import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
-import com.arobs.internship.musify.service.ArtistMapper;
-import com.arobs.internship.musify.service.ArtistMapperImpl;
+import com.arobs.internship.musify.mapper.ArtistMapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

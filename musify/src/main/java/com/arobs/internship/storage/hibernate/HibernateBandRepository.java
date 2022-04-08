@@ -1,9 +1,9 @@
-package com.arobs.internship.musify.hibernate;
+package com.arobs.internship.storage.hibernate;
 
 import com.arobs.internship.musify.dto.BandDTO;
+import com.arobs.internship.musify.mapper.BandMapperImpl;
 import com.arobs.internship.musify.model.Band;
-import com.arobs.internship.musify.service.BandMapper;
-import com.arobs.internship.musify.service.BandMapperImpl;
+import com.arobs.internship.musify.mapper.BandMapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

@@ -1,6 +1,7 @@
 package com.arobs.internship.musify.repository;
 
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
+import com.arobs.internship.musify.mapper.UserRowMapper;
 import com.arobs.internship.musify.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

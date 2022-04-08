@@ -1,4 +1,4 @@
-package com.arobs.internship.musify.service;
+package com.arobs.internship.musify.mapper;
 
 import com.arobs.internship.musify.dto.BandDTO;
 import com.arobs.internship.musify.model.Band;

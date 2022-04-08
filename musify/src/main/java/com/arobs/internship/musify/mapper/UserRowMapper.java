@@ -1,4 +1,4 @@
-package com.arobs.internship.musify.repository;
+package com.arobs.internship.musify.mapper;
 
 import com.arobs.internship.musify.model.User;
 import org.springframework.jdbc.core.RowMapper;

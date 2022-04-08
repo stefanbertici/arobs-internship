@@ -1,4 +1,4 @@
-package com.arobs.internship.musify.hibernate;
+package com.arobs.internship.storage.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;

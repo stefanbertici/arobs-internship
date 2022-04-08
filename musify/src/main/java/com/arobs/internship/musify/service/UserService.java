@@ -1,9 +1,11 @@
 package com.arobs.internship.musify.service;
 
+import com.arobs.internship.musify.mapper.UserMapper;
 import com.arobs.internship.musify.dto.UserDTO;
 import com.arobs.internship.musify.dto.UserLoginDTO;
 import com.arobs.internship.musify.dto.UserViewDTO;
 import com.arobs.internship.musify.exception.UnauthorizedException;
+import com.arobs.internship.musify.mapper.UserMapperImpl;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
 import com.arobs.internship.musify.security.InMemoryTokenBlacklist;

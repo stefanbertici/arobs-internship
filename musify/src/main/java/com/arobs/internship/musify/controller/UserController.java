@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserViewDTO>> getAll() {
+    public ResponseEntity<List<UserViewDTO>> getAllUsers() {
         List<UserViewDTO> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody @Valid UserDTO userDTO) {
         UserViewDTO user = userService.updateUser(id, userDTO);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
