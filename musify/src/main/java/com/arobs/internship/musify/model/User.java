@@ -30,22 +30,7 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "playlist_id") })
     private Set<Playlist> subscribedToPlaylists = new HashSet<>();
 
-    public User() {
-    }
-
-    public User(Integer id, String firstName, String lastName, String email,
-                String encryptedPassword, String country, String role, String status) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.encryptedPassword = encryptedPassword;
-        this.country = country;
-        this.role = role;
-        this.status = status;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

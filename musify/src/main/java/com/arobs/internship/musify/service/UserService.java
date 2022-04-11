@@ -63,6 +63,7 @@ public class UserService {
         user.setEncryptedPassword(encryptedPassword);
         user.setRole("user");
         user.setStatus("active");
+
         user = userRepository.save(user);
 
         return userMapper.toViewDto(user);
@@ -87,11 +88,21 @@ public class UserService {
     }
 
     public UserViewDTO updateUser(Integer id, UserDTO userDTO) {
-        User user = userMapper.toEntity(userDTO);
+        Optional<User> optional = userRepository.findById(id);
+
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no user with id = " + id);
+        }
+
+        User user = optional.get();
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
-        user.setId(id);
-        userRepository.save(user);
+        user.setCountry(userDTO.getCountry());
+
+        user = userRepository.save(user);
 
         return userMapper.toViewDto(user);
     }
