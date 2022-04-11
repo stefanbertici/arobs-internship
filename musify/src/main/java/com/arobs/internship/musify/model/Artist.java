@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+// for base hibernate operations
 @NamedQueries({
         @NamedQuery(name = "findAllArtists", query = "from Artist"),
         @NamedQuery(name = "findArtistById", query = "from Artist where id = :id")
@@ -33,7 +34,17 @@ public class Artist {
             inverseJoinColumns = { @JoinColumn(name = "band_id") })
     private Set<Band> bands = new HashSet<>();
 
-    public Artist() {
+    public Artist() {}
+
+    public Artist(Integer id, String firstName, String lastName, String stageName, Date birthday, String activityStartDate, String activityEndDate, Set<Band> bands) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.stageName = stageName;
+        this.birthday = birthday;
+        this.activityStartDate = activityStartDate;
+        this.activityEndDate = activityEndDate;
+        this.bands = bands;
     }
 
     public Integer getId() {
@@ -101,12 +112,12 @@ public class Artist {
     }
 
     public void addBand(Band band) {
-        this.bands.add(band);
+        bands.add(band);
         band.getArtists().add(this);
     }
 
     public void removeBand(Band band) {
-        this.bands.remove(band);
+        bands.remove(band);
         band.getArtists().remove(this);
     }
 }

@@ -27,50 +27,52 @@ public class ArtistService {
         return artistMapper.toDtos(artistRepository.findAll());
     }
 
-    public ArtistDTO getArtistById(int id) {
+    public ArtistDTO getArtistById(Integer id) {
         Optional<Artist> optional = artistRepository.findById(id);
-        if(optional.isPresent()) {
-            return artistMapper.toDto(optional.get());
-        } else {
+
+        if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no artist with id = " + id);
         }
+
+        return artistMapper.toDto(optional.get());
     }
 
     public ArtistDTO addArtist(ArtistDTO artistDTO) {
         Artist artist = artistMapper.toEntity(artistDTO);
-        artist.setId(null);
         artist = artistRepository.save(artist);
 
         return artistMapper.toDto(artist);
     }
 
     @Transactional
-    public ArtistDTO updateArtist(int id, ArtistDTO artistDTO) {
+    public ArtistDTO updateArtist(Integer id, ArtistDTO artistDTO) {
         Optional<Artist> optional = artistRepository.findById(id);
-        if(optional.isPresent()) {
-            Artist artist = optional.get();
-            artist.setFirstName(artistDTO.getFirstName());
-            artist.setLastName(artistDTO.getLastName());
-            artist.setStageName(artistDTO.getStageName());
-            artist.setBirthday(artistDTO.getBirthday());
-            artist.setActivityStartDate(artistDTO.getActivityStartDate());
-            artist.setActivityEndDate(artistDTO.getActivityEndDate());
-            artistRepository.save(artist);
 
-            return artistMapper.toDto(artist);
-        } else {
+        if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no artist with id = " + id);
         }
+
+        Artist artist = optional.get();
+        artist.setFirstName(artistDTO.getFirstName());
+        artist.setLastName(artistDTO.getLastName());
+        artist.setStageName(artistDTO.getStageName());
+        artist.setBirthday(artistDTO.getBirthday());
+        artist.setActivityStartDate(artistDTO.getActivityStartDate());
+        artist.setActivityEndDate(artistDTO.getActivityEndDate());
+        artistRepository.save(artist);
+
+        return artistMapper.toDto(artist);
     }
 
     @Transactional
-    public String deleteArtistById(int id) {
+    public String deleteArtistById(Integer id) {
         Optional<Artist> optional = artistRepository.findById(id);
-        if(optional.isPresent()) {
-            artistRepository.delete(optional.get());
-            return "Successfully deleted.";
-        } else {
+
+        if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no artist with id = " + id);
         }
+
+        artistRepository.delete(optional.get());
+        return "Successfully deleted.";
     }
 }

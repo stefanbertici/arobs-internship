@@ -25,7 +25,15 @@ public class Band{
     @ManyToMany(mappedBy = "bands")
     private Set<Artist> artists = new HashSet<>();
 
-    public Band() {
+    public Band() {}
+
+    public Band(Integer id, String bandName, String location, String activityStartDate, String activityEndDate, Set<Artist> artists) {
+        this.id = id;
+        this.bandName = bandName;
+        this.location = location;
+        this.activityStartDate = activityStartDate;
+        this.activityEndDate = activityEndDate;
+        this.artists = artists;
     }
 
     public Integer getId() {
@@ -74,5 +82,15 @@ public class Band{
 
     public void setArtists(Set<Artist> artists) {
         this.artists = artists;
+    }
+
+    public void addArtist(Artist artist) {
+        artists.add(artist);
+        artist.getBands().add(this);
+    }
+
+    public void removeArtist(Artist artist) {
+        artists.remove(artist);
+        artist.getBands().remove(this);
     }
 }

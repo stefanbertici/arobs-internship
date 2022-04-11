@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserViewDTO> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserViewDTO> getUserById(@PathVariable Integer id) {
         UserViewDTO user = userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -53,19 +53,19 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<UserViewDTO> updateUser(@PathVariable int id, @RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<UserViewDTO> updateUser(@PathVariable Integer id, @RequestBody @Valid UserDTO userDTO) {
         UserViewDTO user = userService.updateUser(id, userDTO);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/user/{id}/promote")
-    public ResponseEntity<UserViewDTO> promoteUser(@PathVariable int id) {
+    public ResponseEntity<UserViewDTO> promoteUser(@PathVariable Integer id) {
         UserViewDTO user = userService.updateUserRole(id, "PROMOTE");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/user/{id}/demote")
-    public ResponseEntity<UserViewDTO> demoteUser(@PathVariable int id) {
+    public ResponseEntity<UserViewDTO> demoteUser(@PathVariable Integer id) {
         UserViewDTO user = userService.updateUserRole(id, "DEMOTE");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

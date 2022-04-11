@@ -1,8 +1,6 @@
 package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.ArtistDTO;
-import com.arobs.internship.musify.dto.UserDTO;
-import com.arobs.internship.musify.dto.UserViewDTO;
 import com.arobs.internship.musify.service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +25,7 @@ public class ArtistController {
     }
 
     @GetMapping("/artist/{id}")
-    public ResponseEntity<ArtistDTO> getArtistById(@PathVariable int id) {
+    public ResponseEntity<ArtistDTO> getArtistById(@PathVariable Integer id) {
         return new ResponseEntity<>(artistService.getArtistById(id), HttpStatus.OK);
     }
 
@@ -37,12 +35,12 @@ public class ArtistController {
     }
 
     @PutMapping("/artist/{id}")
-    public ResponseEntity<ArtistDTO> updateArtist(@PathVariable int id, @RequestBody @Valid ArtistDTO artistDTO) {
+    public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Integer id, @RequestBody @Valid ArtistDTO artistDTO) {
         return new ResponseEntity<>(artistService.updateArtist(id, artistDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/artist/{id}")
-    public ResponseEntity<String> deleteArtistById(@PathVariable int id) {
+    public ResponseEntity<String> deleteArtistById(@PathVariable Integer id) {
         return new ResponseEntity<>(artistService.deleteArtistById(id), HttpStatus.OK);
     }
 }
