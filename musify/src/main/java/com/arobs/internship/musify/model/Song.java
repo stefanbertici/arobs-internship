@@ -3,6 +3,8 @@ package com.arobs.internship.musify.model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "songs")
@@ -15,15 +17,8 @@ public class Song {
     @Column(name = "created_date")
     private Date createdDate;
 
-    public Song() {
-    }
-
-    public Song(Integer id, String title, Time duration, Date createdDate) {
-        this.id = id;
-        this.title = title;
-        this.duration = duration;
-        this.createdDate = createdDate;
-    }
+    @OneToMany(mappedBy = "song")
+    Set<AlternativeSongTitle> alternativeSongTitles = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -55,5 +50,13 @@ public class Song {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public Set<AlternativeSongTitle> getAlternativeSongTitles() {
+        return alternativeSongTitles;
+    }
+
+    public void setAlternativeSongTitles(Set<AlternativeSongTitle> alternativeSongTitles) {
+        this.alternativeSongTitles = alternativeSongTitles;
     }
 }

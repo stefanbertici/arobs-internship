@@ -16,18 +16,6 @@ public class Album {
     private Date releaseDate;
     private String label;
 
-    public Album() {
-    }
-
-    public Album(Integer id, String title, String description, String genre, Date releaseDate, String label) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.genre = genre;
-        this.releaseDate = releaseDate;
-        this.label = label;
-    }
-
     public Integer getId() {
         return id;
     }

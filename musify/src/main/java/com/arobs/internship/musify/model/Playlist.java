@@ -25,16 +25,6 @@ public class Playlist {
     @ManyToMany(mappedBy = "subscribedToPlaylists")
     private Set<User> users = new HashSet<>();
 
-    public Playlist() {
-    }
-
-    public Playlist(Integer id, String type, Date createdDate, Date updatedDate) {
-        this.id = id;
-        this.type = type;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-    }
-
     public Integer getId() {
         return id;
     }
