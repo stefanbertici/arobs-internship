@@ -23,7 +23,13 @@ public class Playlist {
     private Date updatedDate;
 
     @ManyToMany(mappedBy = "subscribedToPlaylists")
-    private Set<User> users = new HashSet<>();
+    private Set<User> subscribedUsers = new HashSet<>();
+
+    @ManyToMany()
+    @JoinTable(name = "playlists_songs",
+            joinColumns = { @JoinColumn(name = "playlist_id") },
+            inverseJoinColumns = { @JoinColumn(name = "song_id") })
+    private Set<Song> songsInPlaylist = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -65,21 +71,39 @@ public class Playlist {
         this.updatedDate = updatedDate;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<User> getSubscribedUsers() {
+        return subscribedUsers;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setSubscribedUsers(Set<User> users) {
+        this.subscribedUsers = users;
+    }
+
+    public Set<Song> getSongsInPlaylist() {
+        return songsInPlaylist;
+    }
+
+    public void setSongsInPlaylist(Set<Song> songsInPlaylist) {
+        this.songsInPlaylist = songsInPlaylist;
     }
 
     public void addSubscribedUser(User user) {
-        users.add(user);
+        subscribedUsers.add(user);
         user.getSubscribedToPlaylists().add(this);
     }
 
     public void removeSubscribedUser(User user) {
-        users.remove(user);
+        subscribedUsers.remove(user);
         user.getSubscribedToPlaylists().remove(this);
+    }
+
+    public void addSong(Song song) {
+        songsInPlaylist.add(song);
+        song.getPlaylists().add(this);
+    }
+
+    public void removeSong(Song song) {
+        songsInPlaylist.remove(song);
+        song.getPlaylists().remove(this);
     }
 }

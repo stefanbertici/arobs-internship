@@ -29,6 +29,9 @@ public class Song {
     @ManyToMany(mappedBy = "bandSongs")
     private Set<Band> bands = new HashSet<>();
 
+    @ManyToMany(mappedBy = "songsInPlaylist")
+    private Set<Playlist> playlists = new HashSet<>();
+
     public Integer getId() {
         return id;
     }
@@ -103,6 +106,14 @@ public class Song {
         this.bands = bands;
     }
 
+    public Set<Playlist> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(Set<Playlist> playlists) {
+        this.playlists = playlists;
+    }
+
     public void addAlternativeSongTitle(AlternativeSongTitle alternativeSongTitle) {
         alternativeSongTitles.add(alternativeSongTitle);
         alternativeSongTitle.setSong(this);
@@ -131,5 +142,15 @@ public class Song {
     public void removeSongFromBand(Band band) {
         bands.remove(band);
         band.getBandSongs().remove(this);
+    }
+
+    public void addSongToPlaylist(Playlist playlist) {
+        playlists.add(playlist);
+        playlist.getSongsInPlaylist().add(this);
+    }
+
+    public void removeSongFromPlaylist(Playlist playlist) {
+        playlists.remove(playlist);
+        playlist.getSongsInPlaylist().remove(this);
     }
 }

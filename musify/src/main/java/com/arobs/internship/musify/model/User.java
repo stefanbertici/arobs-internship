@@ -108,12 +108,12 @@ public class User {
 
     public void subscribeToPlaylist(Playlist playlist) {
         subscribedToPlaylists.add(playlist);
-        playlist.getUsers().add(this);
+        playlist.getSubscribedUsers().add(this);
     }
 
     public void unsubscribeFromPlaylist(Playlist playlist) {
         subscribedToPlaylists.remove(playlist);
-        playlist.getUsers().remove(this);
+        playlist.getSubscribedUsers().remove(this);
     }
 
     public void addOwnedPlaylist(Playlist playlist) {
