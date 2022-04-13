@@ -21,7 +21,7 @@ public class JwtUtils {
         Calendar c = Calendar.getInstance();
         Date currentDate = c.getTime();
 
-        c.add(Calendar.MINUTE, 30);
+        c.add(Calendar.HOUR, 24);
         Date expireDate = c.getTime();
 
         return JWT.create()

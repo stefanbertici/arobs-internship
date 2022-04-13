@@ -1,5 +1,7 @@
 package com.arobs.internship.musify.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,9 +25,11 @@ public class Band{
     private String activityEndDate;
 
     @ManyToMany(mappedBy = "bands")
+    @JsonIgnore
     private Set<Artist> artists = new HashSet<>();
 
     @OneToMany(mappedBy = "band")
+    @JsonIgnore
     private Set<Album> bandAlbums = new HashSet<>();
 
     public Integer getId() {

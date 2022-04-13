@@ -57,15 +57,4 @@ public class BandDTO {
     public void setActivityEndDate(String activityEndDate) {
         this.activityEndDate = activityEndDate;
     }
-
-    @Override
-    public String toString() {
-        return "BandDTO{" +
-                "id=" + id +
-                ", bandName='" + bandName + '\'' +
-                ", location='" + location + '\'' +
-                ", activityStartDate='" + activityStartDate + '\'' +
-                ", activityEndDate='" + activityEndDate + '\'' +
-                '}';
-    }
 }

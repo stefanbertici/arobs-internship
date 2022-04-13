@@ -1,5 +1,7 @@
 package com.arobs.internship.musify.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,6 +12,7 @@ public class AlternativeSongTitle {
 
     @ManyToOne
     @JoinColumn(name = "song_id")
+    @JsonBackReference
     private Song song;
 
     @Column(name = "alternative_title")

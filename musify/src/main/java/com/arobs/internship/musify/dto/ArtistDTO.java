@@ -7,7 +7,6 @@ public class ArtistDTO {
     private Integer id;
     private String firstName;
     private String lastName;
-    @NotBlank(message = "Stage name cannot be blank")
     private String stageName;
     private Date birthday;
     private String activityStartDate;
@@ -80,18 +79,5 @@ public class ArtistDTO {
 
     public void setActivityEndDate(String activityEndDate) {
         this.activityEndDate = activityEndDate;
-    }
-
-    @Override
-    public String toString() {
-        return "ArtistDTO{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", stageName='" + stageName + '\'' +
-                ", birthday=" + birthday +
-                ", activityStartDate='" + activityStartDate + '\'' +
-                ", activityEndDate='" + activityEndDate + '\'' +
-                '}';
     }
 }

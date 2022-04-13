@@ -1,5 +1,7 @@
 package com.arobs.internship.musify.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
@@ -19,15 +21,18 @@ public class Playlist {
 
     @ManyToOne
     @JoinColumn(name = "owner_user_id")
+    @JsonIgnore
     private User ownerUser;
 
     @ManyToMany(mappedBy = "subscribedToPlaylists")
+    @JsonIgnore
     private Set<User> subscribedUsers = new HashSet<>();
 
     @ManyToMany()
     @JoinTable(name = "playlists_songs",
             joinColumns = { @JoinColumn(name = "playlist_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
+    @JsonIgnore
     private Set<Song> songsInPlaylist = new HashSet<>();
 
     public Integer getId() {

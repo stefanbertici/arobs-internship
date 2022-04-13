@@ -45,7 +45,6 @@ public class UserService {
     @Transactional
     public UserViewDTO getUserById(int id) {
         Optional<User> optional = userRepository.findById(id);
-
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no user with id = " + id);
         }
@@ -56,7 +55,6 @@ public class UserService {
     @Transactional
     public UserViewDTO registerUser(UserDTO userDTO) {
         Optional<User> optional = userRepository.findUserByEmail(userDTO.getEmail());
-
         if (optional.isPresent()) {
             throw new IllegalArgumentException("Email " + userDTO.getEmail() + " is already registered");
         }
@@ -66,7 +64,6 @@ public class UserService {
         user.setEncryptedPassword(encryptedPassword);
         user.setRole("user");
         user.setStatus("active");
-
         user = userRepository.save(user);
 
         return userMapper.toViewDto(user);
@@ -76,13 +73,11 @@ public class UserService {
     public String loginUser(UserLoginDTO userLoginDTO) {
         Optional<User> optional = userRepository.findUserByEmail(userLoginDTO.getEmail());
         String encryptedInputPassword = getEncryptedPassword(userLoginDTO.getPassword());
-
         if (optional.isEmpty()) {
             throw new UnauthorizedException("Incorrect email or password");
         }
 
         User user = optional.get();
-
         if (!UserUtils.canLogin(user, encryptedInputPassword)) {
             throw new UnauthorizedException("Incorrect email or password");
         }
@@ -103,7 +98,6 @@ public class UserService {
     @Transactional
     public UserViewDTO updateUser(Integer id, UserDTO userDTO) {
         Optional<User> optional = userRepository.findById(id);
-
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no user with id = " + id);
         }
@@ -119,7 +113,6 @@ public class UserService {
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setCountry(userDTO.getCountry());
-
         user = userRepository.save(user);
 
         return userMapper.toViewDto(user);
@@ -140,7 +133,6 @@ public class UserService {
         }
 
         Optional<User> optional = userRepository.findById(id);
-
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no user with id = " + id);
         }
@@ -167,7 +159,6 @@ public class UserService {
         }
 
         Optional<User> optional = userRepository.findById(id);
-
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no user with id = " + id);
         }

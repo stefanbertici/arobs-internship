@@ -1,15 +1,16 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
+import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.ArtistMapper;
 import com.arobs.internship.musify.dto.ArtistDTO;
 import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.repository.ArtistRepository;
+import com.arobs.internship.musify.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,21 +24,12 @@ public class ArtistService {
         this.artistMapper = artistMapper;
     }
 
-    public List<ArtistDTO> getArtists() {
-        return artistMapper.toDtos(artistRepository.findAll());
-    }
-
-    public ArtistDTO getArtistById(Integer id) {
-        Optional<Artist> optional = artistRepository.findById(id);
-
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no artist with id = " + id);
+    @Transactional
+    public ArtistDTO addArtist(ArtistDTO artistDTO) {
+        if (!UserUtils.isCurrentAdmin()) {
+            throw new UnauthorizedException("Only admins can create new artists");
         }
 
-        return artistMapper.toDto(optional.get());
-    }
-
-    public ArtistDTO addArtist(ArtistDTO artistDTO) {
         Artist artist = artistMapper.toEntity(artistDTO);
         artist = artistRepository.save(artist);
 
@@ -46,8 +38,11 @@ public class ArtistService {
 
     @Transactional
     public ArtistDTO updateArtist(Integer id, ArtistDTO artistDTO) {
-        Optional<Artist> optional = artistRepository.findById(id);
+        if (!UserUtils.isCurrentAdmin()) {
+            throw new UnauthorizedException("Only admins can update artists");
+        }
 
+        Optional<Artist> optional = artistRepository.findById(id);
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no artist with id = " + id);
         }
@@ -62,17 +57,5 @@ public class ArtistService {
         artistRepository.save(artist);
 
         return artistMapper.toDto(artist);
-    }
-
-    @Transactional
-    public String deleteArtistById(Integer id) {
-        Optional<Artist> optional = artistRepository.findById(id);
-
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no artist with id = " + id);
-        }
-
-        artistRepository.delete(optional.get());
-        return "Successfully deleted.";
     }
 }

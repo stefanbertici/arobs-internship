@@ -1,5 +1,8 @@
 package com.arobs.internship.musify.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
@@ -32,15 +35,18 @@ public class Artist {
     @JoinTable(name = "bands_artists",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "band_id") })
+    @JsonIgnore
     private Set<Band> bands = new HashSet<>();
 
     @OneToMany(mappedBy = "artist")
+    @JsonIgnore
     private Set<Album> artistAlbums = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "artists_songs",
             joinColumns = { @JoinColumn(name = "artist_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
+    @JsonBackReference
     private Set<Song> composedSongs = new HashSet<>();
 
     public Integer getId() {

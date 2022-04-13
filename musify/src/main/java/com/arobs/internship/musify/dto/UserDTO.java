@@ -61,15 +61,4 @@ public class UserDTO {
     public void setCountry(String country) {
         this.country = country;
     }
-
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", country='" + country + '\'' +
-                '}';
-    }
 }
