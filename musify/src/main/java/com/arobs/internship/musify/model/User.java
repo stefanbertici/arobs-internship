@@ -98,6 +98,14 @@ public class User {
         return firstName + " " + lastName;
     }
 
+    public Set<Playlist> getOwnedPlaylists() {
+        return ownedPlaylists;
+    }
+
+    public void setOwnedPlaylists(Set<Playlist> ownedPlaylists) {
+        this.ownedPlaylists = ownedPlaylists;
+    }
+
     public Set<Playlist> getSubscribedToPlaylists() {
         return subscribedToPlaylists;
     }

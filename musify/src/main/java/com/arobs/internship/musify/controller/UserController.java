@@ -69,4 +69,16 @@ public class UserController {
         UserViewDTO user = userService.updateUserRole(id, "DEMOTE");
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @PutMapping("/user/{id}/activate")
+    public ResponseEntity<UserViewDTO> activateUser(@PathVariable Integer id) {
+        UserViewDTO user = userService.updateUserStatus(id, "ACTIVATE");
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/user/{id}/deactivate")
+    public ResponseEntity<UserViewDTO> deactivateUser(@PathVariable Integer id) {
+        UserViewDTO user = userService.updateUserStatus(id, "DEACTIVATE");
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }

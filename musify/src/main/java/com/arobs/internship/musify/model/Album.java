@@ -18,17 +18,19 @@ public class Album {
     private Date releaseDate;
     private String label;
 
-    @ManyToMany()
+    @ManyToOne
+    @JoinColumn(name = "artist_id")
+    private Artist artist;
+
+    @ManyToOne
+    @JoinColumn(name = "band_id")
+    private Band band;
+
+    @ManyToMany
     @JoinTable(name = "albums_songs",
             joinColumns = { @JoinColumn(name = "album_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
     private Set<Song> songs = new HashSet<>();
-
-    @ManyToMany(mappedBy = "artistAlbums")
-    private Set<Artist> artists = new HashSet<>();
-
-    @ManyToMany(mappedBy = "bandAlbums")
-    private Set<Band> bands = new HashSet<>();
 
     public Integer getId() {
         return id;
@@ -86,20 +88,40 @@ public class Album {
         this.songs = songs;
     }
 
-    public Set<Artist> getArtists() {
-        return artists;
+    public Artist getArtist() {
+        return artist;
     }
 
-    public void setArtists(Set<Artist> artists) {
-        this.artists = artists;
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 
-    public Set<Band> getBands() {
-        return bands;
+    public Band getBand() {
+        return band;
     }
 
-    public void setBands(Set<Band> bands) {
-        this.bands = bands;
+    public void setBand(Band band) {
+        this.band = band;
+    }
+
+    public void addArtist(Artist artist) {
+        this.artist = artist;
+        artist.getArtistAlbums().add(this);
+    }
+
+    public void removeArtist(Artist artist) {
+        this.artist = null;
+        artist.getArtistAlbums().remove(this);
+    }
+
+    public void addBand(Band band) {
+        this.band = band;
+        band.getBandAlbums().add(this);
+    }
+
+    public void removeBand(Band band) {
+        this.band = null;
+        band.getBandAlbums().remove(this);
     }
 
     public void addSong(Song song) {
@@ -110,25 +132,5 @@ public class Album {
     public void removeSong(Song song) {
         songs.remove(song);
         song.getAlbums().remove(this);
-    }
-
-    public void addArtist(Artist artist) {
-        artists.add(artist);
-        artist.getArtistAlbums().add(this);
-    }
-
-    public void removeArtist(Artist artist) {
-        artists.remove(artist);
-        artist.getArtistAlbums().remove(this);
-    }
-
-    public void addBand(Band band) {
-        bands.add(band);
-        band.getBandAlbums().add(this);
-    }
-
-    public void removeBand(Band band) {
-        bands.remove(band);
-        band.getBandAlbums().remove(this);
     }
 }

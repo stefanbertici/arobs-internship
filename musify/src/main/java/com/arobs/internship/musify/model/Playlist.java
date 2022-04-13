@@ -11,16 +11,15 @@ public class Playlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne
-    @JoinColumn(name = "owner_user_id")
-    private User ownerUser;
-
     private String type;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_user_id")
+    private User ownerUser;
 
     @ManyToMany(mappedBy = "subscribedToPlaylists")
     private Set<User> subscribedUsers = new HashSet<>();
@@ -85,6 +84,16 @@ public class Playlist {
 
     public void setSongsInPlaylist(Set<Song> songsInPlaylist) {
         this.songsInPlaylist = songsInPlaylist;
+    }
+
+    public void addOwnerUser(User user) {
+        ownerUser = user;
+        user.getOwnedPlaylists().add(this);
+    }
+
+    public void removeOwnerUser(User user) {
+        ownerUser = null;
+        user.getOwnedPlaylists().remove(this);
     }
 
     public void addSubscribedUser(User user) {

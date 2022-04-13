@@ -29,13 +29,17 @@ public class AlternativeSongTitle {
 
     public void setSong(Song song) {
         this.song = song;
+    }
+
+    public void addSong(Song song) {
+        this.song = song;
         song.getAlternativeSongTitles().add(this);
     }
 
-    /*public void removeSong(Song song) {
+    public void removeSong(Song song) {
         this.song = null;
         song.getAlternativeSongTitles().remove(this);
-    }*/
+    }
 
     public String getAlternativeTitle() {
         return alternativeTitle;

@@ -23,11 +23,8 @@ public class Song {
     @ManyToMany(mappedBy = "songs")
     private Set<Album> albums = new HashSet<>();
 
-    @ManyToMany(mappedBy = "artistSongs")
-    private Set<Artist> artists = new HashSet<>();
-
-    @ManyToMany(mappedBy = "bandSongs")
-    private Set<Band> bands = new HashSet<>();
+    @ManyToMany(mappedBy = "composedSongs")
+    private Set<Artist> composers = new HashSet<>();
 
     @ManyToMany(mappedBy = "songsInPlaylist")
     private Set<Playlist> playlists = new HashSet<>();
@@ -80,30 +77,12 @@ public class Song {
         this.albums = albums;
     }
 
-    public void addToAlbum(Album album) {
-        albums.add(album);
-        album.getSongs().add(this);
+    public Set<Artist> getComposers() {
+        return composers;
     }
 
-    public void removeFromAlbum(Album album) {
-        albums.remove(album);
-        album.getSongs().remove(this);
-    }
-
-    public Set<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(Set<Artist> artists) {
-        this.artists = artists;
-    }
-
-    public Set<Band> getBands() {
-        return bands;
-    }
-
-    public void setBands(Set<Band> bands) {
-        this.bands = bands;
+    public void setComposers(Set<Artist> artists) {
+        this.composers = artists;
     }
 
     public Set<Playlist> getPlaylists() {
@@ -119,37 +98,37 @@ public class Song {
         alternativeSongTitle.setSong(this);
     }
 
-    /*public void removeAlternativeSongTitle(AlternativeSongTitle alternativeSongTitle) {
+    public void removeAlternativeSongTitle(AlternativeSongTitle alternativeSongTitle) {
         alternativeSongTitles.remove(alternativeSongTitle);
         alternativeSongTitle.setSong(null);
-    }*/
-
-    public void addSongToArtist(Artist artist) {
-        artists.add(artist);
-        artist.getArtistSongs().add(this);
     }
 
-    public void removeSongFromArtist(Artist artist) {
-        artists.remove(artist);
-        artist.getArtistSongs().remove(this);
+    public void addToAlbum(Album album) {
+        albums.add(album);
+        album.getSongs().add(this);
     }
 
-    public void addSongToBand(Band band) {
-        bands.add(band);
-        band.getBandSongs().add(this);
+    public void removeFromAlbum(Album album) {
+        albums.remove(album);
+        album.getSongs().remove(this);
     }
 
-    public void removeSongFromBand(Band band) {
-        bands.remove(band);
-        band.getBandSongs().remove(this);
+    public void addComposer(Artist artist) {
+        composers.add(artist);
+        artist.getComposedSongs().add(this);
     }
 
-    public void addSongToPlaylist(Playlist playlist) {
+    public void removeComposer(Artist artist) {
+        composers.remove(artist);
+        artist.getComposedSongs().remove(this);
+    }
+
+    public void addToPlaylist(Playlist playlist) {
         playlists.add(playlist);
         playlist.getSongsInPlaylist().add(this);
     }
 
-    public void removeSongFromPlaylist(Playlist playlist) {
+    public void removeFromPlaylist(Playlist playlist) {
         playlists.remove(playlist);
         playlist.getSongsInPlaylist().remove(this);
     }
