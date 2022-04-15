@@ -19,10 +19,10 @@ public class SongController {
         this.songService = songService;
     }
 
-    @GetMapping("/songs")
+    /*@GetMapping("/songs")
     public ResponseEntity<List<Song>> getSongs() {
         return new ResponseEntity<>(songService.getSongs(), HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping("/song")
     public ResponseEntity<SongDTO> addSong(@RequestBody SongDTO songDTO) {

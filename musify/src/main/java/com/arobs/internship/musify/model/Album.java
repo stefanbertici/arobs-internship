@@ -1,7 +1,5 @@
 package com.arobs.internship.musify.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
@@ -32,7 +30,6 @@ public class Album {
     @JoinTable(name = "albums_songs",
             joinColumns = { @JoinColumn(name = "album_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
-    @JsonBackReference
     private Set<Song> songs = new HashSet<>();
 
     public Integer getId() {

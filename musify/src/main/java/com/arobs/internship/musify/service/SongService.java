@@ -57,7 +57,7 @@ public class SongService {
         return songMapper.toDto(song);
     }
 
-    public List<Song> getSongs() {
+    /*public List<Song> getSongs() {
         return songRepository.findAll();
-    }
+    }*/
 }

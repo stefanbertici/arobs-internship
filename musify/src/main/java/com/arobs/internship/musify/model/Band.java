@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+// for base hibernate operations
 @NamedQueries({
         @NamedQuery(name = "findAllBands", query = "from Band"),
         @NamedQuery(name = "findBandById", query = "from Band where id = :id")
@@ -25,11 +26,9 @@ public class Band{
     private String activityEndDate;
 
     @ManyToMany(mappedBy = "bands")
-    @JsonIgnore
     private Set<Artist> artists = new HashSet<>();
 
     @OneToMany(mappedBy = "band")
-    @JsonIgnore
     private Set<Album> bandAlbums = new HashSet<>();
 
     public Integer getId() {

@@ -1,8 +1,5 @@
 package com.arobs.internship.musify.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
@@ -21,19 +18,15 @@ public class Song {
     private Date createdDate;
 
     @OneToMany(mappedBy = "song")
-    @JsonManagedReference
     Set<AlternativeSongTitle> alternativeSongTitles = new HashSet<>();
 
     @ManyToMany(mappedBy = "songs")
-    @JsonManagedReference
     private Set<Album> albums = new HashSet<>();
 
     @ManyToMany(mappedBy = "composedSongs")
-    @JsonManagedReference
     private Set<Artist> composers = new HashSet<>();
 
     @ManyToMany(mappedBy = "songsInPlaylist")
-    @JsonIgnore
     private Set<Playlist> playlists = new HashSet<>();
 
     public Integer getId() {

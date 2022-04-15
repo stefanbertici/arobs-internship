@@ -15,9 +15,6 @@ import javax.sql.DataSource;
 public class MusifyApplication {
     public static void main(String[] args) {
         SpringApplication.run(MusifyApplication.class, args);
-
-        /*HibernateArtistRepository hibernateArtistRepository = new HibernateArtistRepository();
-        HibernateBandRepository hibernateBandRepository = new HibernateBandRepository();*/
     }
 
     @Bean
