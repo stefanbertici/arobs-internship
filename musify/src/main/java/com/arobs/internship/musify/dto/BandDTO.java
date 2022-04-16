@@ -1,21 +1,26 @@
 package com.arobs.internship.musify.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BandDTO {
     private Integer id;
     private String bandName;
     private String location;
     private String activityStartDate;
     private String activityEndDate;
+    private List<Integer> bandMembersIds;
 
     public BandDTO() {
     }
 
-    public BandDTO(Integer id, String bandName, String location, String activityStartDate, String activityEndDate) {
+    public BandDTO(Integer id, String bandName, String location, String activityStartDate, String activityEndDate, List<Integer> bandMembersIds) {
         this.id = id;
         this.bandName = bandName;
         this.location = location;
         this.activityStartDate = activityStartDate;
         this.activityEndDate = activityEndDate;
+        this.bandMembersIds = bandMembersIds;
     }
 
     public Integer getId() {
@@ -56,5 +61,13 @@ public class BandDTO {
 
     public void setActivityEndDate(String activityEndDate) {
         this.activityEndDate = activityEndDate;
+    }
+
+    public List<Integer> getBandMembersIds() {
+        return bandMembersIds;
+    }
+
+    public void setBandMembersIds(List<Integer> bandMembersIds) {
+        this.bandMembersIds = bandMembersIds;
     }
 }

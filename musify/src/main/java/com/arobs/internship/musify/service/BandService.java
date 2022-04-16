@@ -4,23 +4,29 @@ import com.arobs.internship.musify.dto.BandDTO;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.BandMapper;
+import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
+import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BandService {
     private final BandRepository bandRepository;
+    private final ArtistRepository artistRepository;
     private final BandMapper bandMapper;
 
     @Autowired
-    public BandService(BandRepository bandRepository, BandMapper bandMapper) {
+    public BandService(BandRepository bandRepository, BandMapper bandMapper, ArtistRepository artistRepository) {
         this.bandRepository = bandRepository;
+        this.artistRepository = artistRepository;
         this.bandMapper = bandMapper;
     }
 
@@ -31,9 +37,14 @@ public class BandService {
         }
 
         Band band = bandMapper.toEntity(bandDTO);
-        band = bandRepository.save(band);
+        if (!bandDTO.getBandMembersIds().isEmpty()) {
+            addMembersById(band, bandDTO);
+        }
 
-        return bandMapper.toDto(band);
+        band = bandRepository.save(band);
+        bandDTO = bandMapper.toDto(band);
+
+        return bandDTO;
     }
 
     @Transactional
@@ -52,8 +63,30 @@ public class BandService {
         band.setLocation(bandDTO.getLocation());
         band.setActivityStartDate(bandDTO.getActivityStartDate());
         band.setActivityEndDate(bandDTO.getActivityEndDate());
-        bandRepository.save(band);
+        if (!bandDTO.getBandMembersIds().isEmpty()) {
+            clearMembers(band);
+            addMembersById(band, bandDTO);
+        }
 
-        return bandMapper.toDto(band);
+        band = bandRepository.save(band);
+        bandDTO = bandMapper.toDto(band);
+
+        return bandDTO;
+    }
+
+    public void clearMembers(Band band) {
+        Set<Artist> currentMembers = band.getArtists();
+        for (Artist artist : currentMembers) {
+            artist.getBands().remove(band);
+        }
+
+        band.getArtists().clear();
+    }
+
+    public void addMembersById(Band band, BandDTO bandDTO) {
+        List<Artist> artists = (List<Artist>) artistRepository.findAllById(bandDTO.getBandMembersIds());
+        for (Artist artist : artists) {
+            band.addArtist(artist);
+        }
     }
 }

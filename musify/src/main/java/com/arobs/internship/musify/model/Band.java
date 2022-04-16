@@ -1,9 +1,9 @@
 package com.arobs.internship.musify.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 // for base hibernate operations
@@ -77,6 +77,15 @@ public class Band{
 
     public void setArtists(Set<Artist> artists) {
         this.artists = artists;
+    }
+
+    public List<Integer> getArtistsIds() {
+        List<Integer> ids = new ArrayList<>();
+        for (Artist artist : artists) {
+            ids.add(artist.getId());
+        }
+
+        return ids;
     }
 
     public Set<Album> getBandAlbums() {
