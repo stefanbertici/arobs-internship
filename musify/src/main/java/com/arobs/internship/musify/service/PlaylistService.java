@@ -126,6 +126,34 @@ public class PlaylistService {
     }
 
     @Transactional
+    public PlaylistDTO removeSongFromPlaylist(Integer playlistId, Integer songId) {
+        Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
+        Optional<Song> optionalSong = songRepository.findById(songId);
+
+        if (optionalPlaylist.isEmpty()) {
+            throw new ResourceNotFoundException("There is no playlist with id = " + playlistId);
+        }
+
+        if (optionalSong.isEmpty()) {
+            throw new ResourceNotFoundException("There is no song with id = " + songId);
+        }
+
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
+        Playlist playlist = optionalPlaylist.get();
+
+        if (user.getId().intValue() != playlist.getOwnerUserId().intValue()) {
+            throw new UnauthorizedException("You can't modify playlists you do not own");
+        }
+
+        Song song = optionalSong.get();
+        playlist.removeSong(song);
+        playlist = playlistRepository.save(playlist);
+
+        return playlistMapper.toDto(playlist);
+    }
+
+    @Transactional
     public PlaylistDTO addAlbumToPlaylist(Integer playlistId, Integer albumId) {
         Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
         Optional<Album> optionalAlbum = albumRepository.findById(albumId);

@@ -1,11 +1,14 @@
 package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.SongDTO;
+import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class SongController {
@@ -15,14 +18,16 @@ public class SongController {
     public SongController(SongService songService) {
         this.songService = songService;
     }
+    
+    @GetMapping("/songs/playlist/{id}")
+    public ResponseEntity<List<SongViewDTO>> readSongsByPlaylistId(@PathVariable Integer id) {
+        return new ResponseEntity<>(songService.readSongsByPlaylistId(id), HttpStatus.OK);
+    }
 
-    // TODO get songs based on playlist
-    /*@GetMapping("/songs")
-    public ResponseEntity<List<Song>> readSongs() {
-        return new ResponseEntity<>(songService.readSongs(), HttpStatus.OK);
-    }*/
-
-    // TODO get songs based on albums
+    @GetMapping("/songs/album/{id}")
+    public ResponseEntity<List<SongViewDTO>> readSongsByAlbumId(@PathVariable Integer id) {
+        return new ResponseEntity<>(songService.readSongsByAlbumId(id), HttpStatus.OK);
+    }
 
     @PostMapping("/song")
     public ResponseEntity<SongDTO> createSong(@RequestBody SongDTO songDTO) {

@@ -87,6 +87,13 @@ public class Song {
         this.albums = albums;
     }
 
+    public List<String> getAlbumsTitlesList() {
+        return albums
+                .stream()
+                .map(Album::getTitle)
+                .collect(Collectors.toList());
+    }
+
     public Set<Artist> getComposers() {
         return composers;
     }
@@ -95,13 +102,18 @@ public class Song {
         this.composers = artists;
     }
 
-    public List<Integer> getComposersIds() {
-        List<Integer> ids = new ArrayList<>();
-        for (Artist composer : composers) {
-            ids.add(composer.getId());
-        }
+    public List<Integer> getComposersIdsList() {
+        return composers
+                .stream()
+                .map(Artist::getId)
+                .collect(Collectors.toList());
+    }
 
-        return ids;
+    public List<String> getComposersStageNamesList() {
+        return composers
+                .stream()
+                .map(Artist::getStageName)
+                .collect(Collectors.toList());
     }
 
     public Set<Playlist> getPlaylists() {

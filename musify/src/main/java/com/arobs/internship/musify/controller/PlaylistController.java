@@ -43,7 +43,10 @@ public class PlaylistController {
         return new ResponseEntity<>(playlistService.addSongToPlaylist(playlistId, songId), HttpStatus.OK);
     }
 
-    // TODO remove songs from playlist
+    @PostMapping("/playlist/{playlistId}/remove/song/{songId}")
+    public ResponseEntity<PlaylistDTO> removeSongFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer songId) {
+        return new ResponseEntity<>(playlistService.removeSongFromPlaylist(playlistId, songId), HttpStatus.OK);
+    }
 
     @PostMapping("/playlist/{playlistId}/add/album/{albumId}")
     public ResponseEntity<PlaylistDTO> addAlbumToPlaylist(@PathVariable Integer playlistId, @PathVariable Integer albumId) {

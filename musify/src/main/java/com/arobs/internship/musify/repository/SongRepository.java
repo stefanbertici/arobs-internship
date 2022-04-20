@@ -8,7 +8,4 @@ import java.util.List;
 
 @Repository
 public interface SongRepository extends CrudRepository<Song, Integer> {
-
-    @Override
-    List<Song> findAll();
 }

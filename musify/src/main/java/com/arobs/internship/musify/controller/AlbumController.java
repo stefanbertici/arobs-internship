@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class AlbumController {
     private final AlbumService albumService;
@@ -16,7 +18,15 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    // TODO get albums based on artist
+    @GetMapping("/albums/artist/{id}")
+    public ResponseEntity<List<AlbumDTO>> readAlbumsByArtistId(@PathVariable Integer id) {
+        return new ResponseEntity<>(albumService.readAlbumsByArtistId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/albums/band/{id}")
+    public ResponseEntity<List<AlbumDTO>> readAlbumsByBandId(@PathVariable Integer id) {
+        return new ResponseEntity<>(albumService.readAlbumsByBandId(id), HttpStatus.OK);
+    }
 
     @PostMapping("/album")
     public ResponseEntity<AlbumDTO> createAlbum(@RequestBody AlbumDTO albumDTO) {
