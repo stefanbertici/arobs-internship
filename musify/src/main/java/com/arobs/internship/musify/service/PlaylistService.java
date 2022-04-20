@@ -37,7 +37,8 @@ public class PlaylistService {
 
     @Transactional
     public List<PlaylistDTO> readUserPlaylists() {
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Set<Playlist> ownedPlaylists = user.getOwnedPlaylists();
         Set<Playlist> followedPlaylists = user.getSubscribedToPlaylists();
 
@@ -54,7 +55,8 @@ public class PlaylistService {
     @Transactional
     public PlaylistDTO createPlaylist(PlaylistDTO playlistDTO) {
         Playlist playlist = playlistMapper.toEntity(playlistDTO);
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
 
         if (!playlistDTO.isPrivateOrPublic()) {
             throw new IllegalArgumentException("Playlist type must be \"private\" or \"public\"");
@@ -80,7 +82,14 @@ public class PlaylistService {
             throw new IllegalArgumentException("Playlist type must be \"private\" or \"public\"");
         }
 
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Playlist playlist = optional.get();
+
+        if (user.getId().intValue() != playlist.getOwnerUserId().intValue()) {
+            throw new UnauthorizedException("You can't modify playlists you do not own");
+        }
+
         playlist.setType(playlistDTO.getType());
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
         playlist = playlistRepository.save(playlist);
@@ -92,7 +101,6 @@ public class PlaylistService {
     public PlaylistDTO addSongToPlaylist(Integer playlistId, Integer songId) {
         Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
         Optional<Song> optionalSong = songRepository.findById(songId);
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
 
         if (optionalPlaylist.isEmpty()) {
             throw new ResourceNotFoundException("There is no playlist with id = " + playlistId);
@@ -102,6 +110,8 @@ public class PlaylistService {
             throw new ResourceNotFoundException("There is no song with id = " + songId);
         }
 
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Playlist playlist = optionalPlaylist.get();
 
         if (user.getId().intValue() != playlist.getOwnerUserId().intValue()) {
@@ -119,7 +129,6 @@ public class PlaylistService {
     public PlaylistDTO addAlbumToPlaylist(Integer playlistId, Integer albumId) {
         Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
         Optional<Album> optionalAlbum = albumRepository.findById(albumId);
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
 
         if (optionalPlaylist.isEmpty()) {
             throw new ResourceNotFoundException("There is no playlist with id = " + playlistId);
@@ -129,6 +138,8 @@ public class PlaylistService {
             throw new ResourceNotFoundException("There is no album with id = " + albumId);
         }
 
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Playlist playlist = optionalPlaylist.get();
 
         if (user.getId().intValue() != playlist.getOwnerUserId().intValue()) {
@@ -147,14 +158,15 @@ public class PlaylistService {
 
     @Transactional
     public String deletePlaylist(Integer id) {
-        Optional<Playlist> optionalPlaylist = playlistRepository.findById(id);
+        Optional<Playlist> optional = playlistRepository.findById(id);
 
-        if (optionalPlaylist.isEmpty()) {
+        if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no playlist with id = " + id);
         }
 
-        Playlist playlist = optionalPlaylist.get();
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
+        Playlist playlist = optional.get();
 
         if (user.getId().intValue() != playlist.getOwnerUserId().intValue()) {
             throw new UnauthorizedException("You can only delete your own playlists");
@@ -174,8 +186,9 @@ public class PlaylistService {
             throw new ResourceNotFoundException("There is no playlist with id = " + id);
         }
 
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Playlist playlist = optional.get();
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
 
         if (!playlist.getType().equals("public")) {
             throw new UnauthorizedException("Private playlist cannot be followed");
@@ -198,8 +211,9 @@ public class PlaylistService {
             throw new ResourceNotFoundException("There is no playlist with id = " + id);
         }
 
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Playlist playlist = optional.get();
-        User user = userRepository.findById(JwtUtils.getCurrentUserId()).get();
 
         if (!playlist.getSubscribedUsers().contains(user)) {
             throw new UnauthorizedException("You aren't subscribed to this playlist");
