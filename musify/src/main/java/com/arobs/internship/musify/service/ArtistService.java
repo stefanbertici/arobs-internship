@@ -25,7 +25,7 @@ public class ArtistService {
     }
 
     @Transactional
-    public ArtistDTO addArtist(ArtistDTO artistDTO) {
+    public ArtistDTO createArtist(ArtistDTO artistDTO) {
         if (!UserUtils.isCurrentAdmin()) {
             throw new UnauthorizedException("Only admins can create new artists");
         }

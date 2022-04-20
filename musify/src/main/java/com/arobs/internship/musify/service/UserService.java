@@ -37,13 +37,13 @@ public class UserService {
     }
 
     @Transactional
-    public List<UserViewDTO> getAllUsers() {
+    public List<UserViewDTO> readAllUsers() {
         List<User> users = userRepository.findAll();
         return userMapper.toViewDtos(users);
     }
 
     @Transactional
-    public UserViewDTO getUserById(int id) {
+    public UserViewDTO readUserById(int id) {
         Optional<User> optional = userRepository.findById(id);
         if (optional.isEmpty()) {
             throw new ResourceNotFoundException("There is no user with id = " + id);

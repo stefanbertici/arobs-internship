@@ -16,9 +16,11 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
+    // TODO get albums based on artist
+
     @PostMapping("/album")
-    public ResponseEntity<AlbumDTO> addAlbum(@RequestBody AlbumDTO albumDTO) {
-        return new ResponseEntity<>(albumService.addAlbum(albumDTO), HttpStatus.OK);
+    public ResponseEntity<AlbumDTO> createAlbum(@RequestBody AlbumDTO albumDTO) {
+        return new ResponseEntity<>(albumService.createAlbum(albumDTO), HttpStatus.OK);
     }
 
     @PutMapping("/album/{id}")

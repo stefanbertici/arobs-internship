@@ -31,7 +31,7 @@ public class BandService {
     }
 
     @Transactional
-    public BandDTO addBand(BandDTO bandDTO) {
+    public BandDTO createBand(BandDTO bandDTO) {
         if (!UserUtils.isCurrentAdmin()) {
             throw new UnauthorizedException("Only admins can create new bands");
         }
@@ -42,9 +42,8 @@ public class BandService {
         }
 
         band = bandRepository.save(band);
-        bandDTO = bandMapper.toDto(band);
 
-        return bandDTO;
+        return bandMapper.toDto(band);
     }
 
     @Transactional
@@ -69,9 +68,8 @@ public class BandService {
         }
 
         band = bandRepository.save(band);
-        bandDTO = bandMapper.toDto(band);
 
-        return bandDTO;
+        return bandMapper.toDto(band);
     }
 
     public void clearMembers(Band band) {

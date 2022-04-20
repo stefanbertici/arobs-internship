@@ -46,6 +46,10 @@ public class Playlist {
         this.ownerUser = ownerUser;
     }
 
+    public Integer getOwnerUserId() {
+        return ownerUser.getId();
+    }
+
     public String getType() {
         return type;
     }

@@ -3,7 +3,9 @@ package com.arobs.internship.musify.model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "albums")
@@ -88,6 +90,13 @@ public class Album {
         this.songs = songs;
     }
 
+    public List<Integer> getSongIds() {
+        return songs
+                .stream()
+                .map(Song::getId)
+                .collect(Collectors.toList());
+    }
+
     public Artist getArtist() {
         return artist;
     }
@@ -96,12 +105,28 @@ public class Album {
         this.artist = artist;
     }
 
+    public Integer getArtistId() {
+        if (artist != null) {
+            return artist.getId();
+        }
+
+        return null;
+    }
+
     public Band getBand() {
         return band;
     }
 
     public void setBand(Band band) {
         this.band = band;
+    }
+
+    public Integer getBandId() {
+        if (band != null) {
+            return band.getId();
+        }
+
+        return null;
     }
 
     public void addArtist(Artist artist) {

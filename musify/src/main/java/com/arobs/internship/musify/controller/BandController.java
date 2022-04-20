@@ -17,8 +17,8 @@ public class BandController {
     }
 
     @PostMapping("/band")
-    public ResponseEntity<BandDTO> addBand(@RequestBody BandDTO bandDTO) {
-        return new ResponseEntity<>(bandService.addBand(bandDTO), HttpStatus.OK);
+    public ResponseEntity<BandDTO> createBand(@RequestBody BandDTO bandDTO) {
+        return new ResponseEntity<>(bandService.createBand(bandDTO), HttpStatus.OK);
     }
 
     @PutMapping("/band/{id}")

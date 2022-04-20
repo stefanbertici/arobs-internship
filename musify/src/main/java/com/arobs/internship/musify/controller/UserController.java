@@ -23,31 +23,31 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserViewDTO>> getAllUsers() {
-        List<UserViewDTO> users = userService.getAllUsers();
+    public ResponseEntity<List<UserViewDTO>> readAllUsers() {
+        List<UserViewDTO> users = userService.readAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserViewDTO> getUserById(@PathVariable Integer id) {
-        UserViewDTO user = userService.getUserById(id);
+    public ResponseEntity<UserViewDTO> readUserById(@PathVariable Integer id) {
+        UserViewDTO user = userService.readUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<UserViewDTO> addUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<UserViewDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         UserViewDTO user = userService.registerUser(userDTO);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<String> login(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+    public ResponseEntity<String> loginUser(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         String token = userService.loginUser(userLoginDTO);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
     
     @PostMapping("/user/logout")
-    public ResponseEntity<String> logout(@RequestHeader(name = "Authorization") String header) { // 'Authorization: Bearer tokenString'
+    public ResponseEntity<String> logoutUser(@RequestHeader(name = "Authorization") String header) { // 'Authorization: Bearer tokenString'
         String response = userService.logoutUser(header);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -1,5 +1,7 @@
 package com.arobs.internship.musify.dto;
 
+import java.util.Objects;
+
 public class UserViewDTO {
     private Integer id;
     private String firstName;
@@ -86,5 +88,18 @@ public class UserViewDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserViewDTO that = (UserViewDTO) o;
+        return id.equals(that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(fullName, that.fullName) && Objects.equals(email, that.email) && Objects.equals(country, that.country) && Objects.equals(role, that.role) && Objects.equals(status, that.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, fullName, email, country, role, status);
     }
 }

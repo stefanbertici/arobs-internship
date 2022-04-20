@@ -17,8 +17,8 @@ public class ArtistController {
     }
 
     @PostMapping("/artist")
-    public ResponseEntity<ArtistDTO> addArtist(@RequestBody ArtistDTO artistDTO) {
-        return new ResponseEntity<>(artistService.addArtist(artistDTO), HttpStatus.OK);
+    public ResponseEntity<ArtistDTO> createArtist(@RequestBody ArtistDTO artistDTO) {
+        return new ResponseEntity<>(artistService.createArtist(artistDTO), HttpStatus.OK);
     }
 
     @PutMapping("/artist/{id}")
