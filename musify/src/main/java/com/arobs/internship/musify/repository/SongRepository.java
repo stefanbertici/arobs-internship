@@ -8,4 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SongRepository extends CrudRepository<Song, Integer> {
+
+    List<Song> findAllByTitleContainingIgnoreCase(String searchTerm);
 }
