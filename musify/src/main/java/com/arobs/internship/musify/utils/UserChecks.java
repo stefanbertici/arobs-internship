@@ -3,14 +3,10 @@ package com.arobs.internship.musify.utils;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.security.JwtUtils;
 
-public class UserUtils {
+public class UserChecks {
 
-    public static boolean isCurrentAdmin() {
-        return JwtUtils.getCurrentUserRole().equals("admin");
-    }
-
-    public static boolean isAdmin(User user) {
-        return user.getRole().equals("admin");
+    public static boolean isCurrentUserNotAdmin() {
+        return !JwtUtils.getCurrentUserRole().equals("admin");
     }
 
     public static boolean isActive(User user) {

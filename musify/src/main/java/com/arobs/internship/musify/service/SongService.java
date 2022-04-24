@@ -8,7 +8,7 @@ import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.*;
 import com.arobs.internship.musify.repository.*;
 import com.arobs.internship.musify.security.JwtUtils;
-import com.arobs.internship.musify.utils.UserUtils;
+import com.arobs.internship.musify.utils.UserChecks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +79,7 @@ public class SongService {
 
     @Transactional
     public SongDTO createSong(SongDTO songDTO) {
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new songs");
         }
 
@@ -99,7 +99,7 @@ public class SongService {
 
     @Transactional
     public SongDTO updateSong(Integer id, SongDTO songDTO) {
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update songs");
         }
 

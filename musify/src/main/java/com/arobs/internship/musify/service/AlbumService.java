@@ -12,7 +12,7 @@ import com.arobs.internship.musify.repository.AlbumRepository;
 import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.repository.SongRepository;
-import com.arobs.internship.musify.utils.UserUtils;
+import com.arobs.internship.musify.utils.UserChecks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,7 +71,7 @@ public class AlbumService {
 
     @Transactional
     public AlbumDTO createAlbum(AlbumDTO albumDTO) {
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new albums");
         }
 
@@ -91,7 +91,7 @@ public class AlbumService {
 
     @Transactional
     public AlbumDTO updateAlbum(Integer id, AlbumDTO albumDTO) {
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update albums");
         }
 

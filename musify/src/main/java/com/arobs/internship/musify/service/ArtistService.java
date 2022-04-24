@@ -6,7 +6,7 @@ import com.arobs.internship.musify.mapper.ArtistMapper;
 import com.arobs.internship.musify.dto.ArtistDTO;
 import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.repository.ArtistRepository;
-import com.arobs.internship.musify.utils.UserUtils;
+import com.arobs.internship.musify.utils.UserChecks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class ArtistService {
 
     @Transactional
     public ArtistDTO createArtist(ArtistDTO artistDTO) {
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new artists");
         }
 
@@ -38,7 +38,7 @@ public class ArtistService {
 
     @Transactional
     public ArtistDTO updateArtist(Integer id, ArtistDTO artistDTO) {
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update artists");
         }
 

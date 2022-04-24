@@ -11,7 +11,7 @@ import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
 import com.arobs.internship.musify.security.InMemoryTokenBlacklist;
 import com.arobs.internship.musify.security.JwtUtils;
-import com.arobs.internship.musify.utils.UserUtils;
+import com.arobs.internship.musify.utils.UserChecks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,11 +78,11 @@ public class UserService {
         }
 
         User user = optional.get();
-        if (!UserUtils.canLogin(user, encryptedInputPassword)) {
+        if (!UserChecks.canLogin(user, encryptedInputPassword)) {
             throw new UnauthorizedException("Incorrect email or password");
         }
 
-        if (!UserUtils.isActive(user)) {
+        if (!UserChecks.isActive(user)) {
             throw new UnauthorizedException("It looks like your account has been deactivated :(\n Please contact our customer support department");
         }
 
@@ -102,7 +102,7 @@ public class UserService {
             throw new ResourceNotFoundException("There is no user with id = " + id);
         }
 
-        if (!UserUtils.isCurrentAdmin() && !UserUtils.isOperationOnSelf(id)) {
+        if (UserChecks.isCurrentUserNotAdmin() && !UserChecks.isOperationOnSelf(id)) {
             throw new UnauthorizedException("Users can only update their own info");
         }
 
@@ -122,7 +122,7 @@ public class UserService {
     public UserViewDTO updateUserRole(Integer id, String operation) {
         String newRole = "";
 
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can modify user roles");
         }
 
@@ -148,7 +148,7 @@ public class UserService {
     public UserViewDTO updateUserStatus(Integer id, String operation) {
         String newStatus = "";
 
-        if (!UserUtils.isCurrentAdmin()) {
+        if (UserChecks.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can modify user statuses");
         }
 
