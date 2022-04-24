@@ -2,10 +2,12 @@ package com.arobs.internship.musify.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 
 public class PlaylistDTO {
     private Integer id;
+    @NotBlank(message = "Type cannot be blank")
     private String type;
     private Date createdDate;
     private Date updatedDate;

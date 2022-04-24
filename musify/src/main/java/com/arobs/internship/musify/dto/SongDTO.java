@@ -1,12 +1,15 @@
 package com.arobs.internship.musify.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
 public class SongDTO {
     private Integer id;
+    @NotBlank(message = "Title cannot be blank")
     private String title;
+    @NotBlank(message = "Duration cannot be blank")
     private Time duration;
     private Date createdDate;
     private List<String> alternativeTitles;

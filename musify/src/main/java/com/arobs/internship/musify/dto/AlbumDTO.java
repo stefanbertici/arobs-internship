@@ -2,6 +2,7 @@ package com.arobs.internship.musify.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ public class AlbumDTO {
     private Integer id;
     private Integer artistId;
     private Integer bandId;
+    @NotBlank(message = "Title cannot be blank")
     private String title;
     private String description;
     private String genre;

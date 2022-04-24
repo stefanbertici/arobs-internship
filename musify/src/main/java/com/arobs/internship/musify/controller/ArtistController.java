@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 public class ArtistController {
     private final ArtistService artistService;
@@ -17,12 +19,12 @@ public class ArtistController {
     }
 
     @PostMapping("/artist")
-    public ResponseEntity<ArtistDTO> createArtist(@RequestBody ArtistDTO artistDTO) {
+    public ResponseEntity<ArtistDTO> createArtist(@RequestBody @Valid ArtistDTO artistDTO) {
         return new ResponseEntity<>(artistService.createArtist(artistDTO), HttpStatus.OK);
     }
 
     @PutMapping("/artist/{id}")
-    public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Integer id, @RequestBody ArtistDTO artistDTO) {
+    public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Integer id, @RequestBody @Valid ArtistDTO artistDTO) {
         return new ResponseEntity<>(artistService.updateArtist(id, artistDTO), HttpStatus.OK);
     }
 }

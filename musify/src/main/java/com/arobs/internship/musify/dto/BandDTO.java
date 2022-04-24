@@ -1,10 +1,12 @@
 package com.arobs.internship.musify.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BandDTO {
     private Integer id;
+    @NotBlank(message = "Band name cannot be blank")
     private String bandName;
     private String location;
     private String activityStartDate;

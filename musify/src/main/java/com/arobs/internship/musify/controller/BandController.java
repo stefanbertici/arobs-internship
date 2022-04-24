@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 public class BandController {
     private final BandService bandService;
@@ -17,12 +19,12 @@ public class BandController {
     }
 
     @PostMapping("/band")
-    public ResponseEntity<BandDTO> createBand(@RequestBody BandDTO bandDTO) {
+    public ResponseEntity<BandDTO> createBand(@RequestBody @Valid BandDTO bandDTO) {
         return new ResponseEntity<>(bandService.createBand(bandDTO), HttpStatus.OK);
     }
 
     @PutMapping("/band/{id}")
-    public ResponseEntity<BandDTO> updateBand(@PathVariable Integer id, @RequestBody BandDTO bandDTO) {
+    public ResponseEntity<BandDTO> updateBand(@PathVariable Integer id, @RequestBody @Valid BandDTO bandDTO) {
         return new ResponseEntity<>(bandService.updateBand(id, bandDTO), HttpStatus.OK);
     }
 }

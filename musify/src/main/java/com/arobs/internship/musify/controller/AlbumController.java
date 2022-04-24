@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,12 +30,12 @@ public class AlbumController {
     }
 
     @PostMapping("/album")
-    public ResponseEntity<AlbumDTO> createAlbum(@RequestBody AlbumDTO albumDTO) {
+    public ResponseEntity<AlbumDTO> createAlbum(@RequestBody @Valid AlbumDTO albumDTO) {
         return new ResponseEntity<>(albumService.createAlbum(albumDTO), HttpStatus.OK);
     }
 
     @PutMapping("/album/{id}")
-    public ResponseEntity<AlbumDTO> updateAlbum(@PathVariable Integer id, @RequestBody AlbumDTO albumDTO) {
+    public ResponseEntity<AlbumDTO> updateAlbum(@PathVariable Integer id, @RequestBody @Valid AlbumDTO albumDTO) {
         return new ResponseEntity<>(albumService.updateAlbum(id, albumDTO), HttpStatus.OK);
     }
 }

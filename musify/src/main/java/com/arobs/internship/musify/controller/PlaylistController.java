@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -24,12 +25,12 @@ public class PlaylistController {
     }
 
     @PostMapping("/playlist")
-    public ResponseEntity<PlaylistDTO> createPlaylist(@RequestBody PlaylistDTO playlistDTO) {
+    public ResponseEntity<PlaylistDTO> createPlaylist(@RequestBody @Valid PlaylistDTO playlistDTO) {
         return new ResponseEntity<>(playlistService.createPlaylist(playlistDTO), HttpStatus.OK);
     }
 
     @PutMapping("/playlist/{id}")
-    public ResponseEntity<PlaylistDTO> updatePlaylist(@PathVariable Integer id, @RequestBody PlaylistDTO playlistDTO) {
+    public ResponseEntity<PlaylistDTO> updatePlaylist(@PathVariable Integer id, @RequestBody @Valid PlaylistDTO playlistDTO) {
         return new ResponseEntity<>(playlistService.updatePlaylist(id, playlistDTO), HttpStatus.OK);
     }
 

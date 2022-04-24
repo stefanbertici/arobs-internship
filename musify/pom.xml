@@ -18,6 +18,8 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<!--hibernate version is for getting rid of a recent bug that occurs when querying with contains/like etc.-->
+		<hibernate.version>5.6.5.Final</hibernate.version>
 	</properties>
 
 	<dependencies>
