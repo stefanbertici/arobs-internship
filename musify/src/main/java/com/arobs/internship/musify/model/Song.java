@@ -3,7 +3,6 @@ package com.arobs.internship.musify.model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

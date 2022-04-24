@@ -1,9 +1,7 @@
 package com.arobs.internship.musify.mapper;
 
-import com.arobs.internship.musify.dto.ArtistDTO;
 import com.arobs.internship.musify.dto.UserDTO;
 import com.arobs.internship.musify.dto.UserViewDTO;
-import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

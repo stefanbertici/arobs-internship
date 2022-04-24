@@ -1,9 +1,12 @@
 package com.arobs.internship.musify.service;
 
+import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.BandDTO;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
+import com.arobs.internship.musify.mapper.AlbumMapper;
 import com.arobs.internship.musify.mapper.BandMapper;
+import com.arobs.internship.musify.model.Album;
 import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
 import com.arobs.internship.musify.repository.ArtistRepository;
@@ -16,18 +19,36 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class BandService {
     private final BandRepository bandRepository;
     private final ArtistRepository artistRepository;
     private final BandMapper bandMapper;
+    private final AlbumMapper albumMapper;
 
     @Autowired
-    public BandService(BandRepository bandRepository, BandMapper bandMapper, ArtistRepository artistRepository) {
+    public BandService(BandRepository bandRepository, BandMapper bandMapper, ArtistRepository artistRepository, AlbumMapper albumMapper) {
         this.bandRepository = bandRepository;
         this.artistRepository = artistRepository;
         this.bandMapper = bandMapper;
+        this.albumMapper = albumMapper;
+    }
+
+    @Transactional
+    public List<AlbumDTO> readAlbumsByBandId(Integer id) {
+        Optional<Band> optional = bandRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no band with id = " + id);
+        }
+
+        Set<Album> albums = optional.get().getBandAlbums();
+
+        return albums
+                .stream()
+                .map(albumMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional

@@ -19,16 +19,6 @@ public class SongController {
     public SongController(SongService songService) {
         this.songService = songService;
     }
-    
-    @GetMapping("/songs/playlist/{id}")
-    public ResponseEntity<List<SongViewDTO>> readSongsByPlaylistId(@PathVariable Integer id) {
-        return new ResponseEntity<>(songService.readSongsByPlaylistId(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/songs/album/{id}")
-    public ResponseEntity<List<SongViewDTO>> readSongsByAlbumId(@PathVariable Integer id) {
-        return new ResponseEntity<>(songService.readSongsByAlbumId(id), HttpStatus.OK);
-    }
 
     @PostMapping("/song")
     public ResponseEntity<SongDTO> createSong(@RequestBody @Valid SongDTO songDTO) {

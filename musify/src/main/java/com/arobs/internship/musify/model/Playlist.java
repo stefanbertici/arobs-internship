@@ -3,6 +3,8 @@ package com.arobs.internship.musify.model;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,7 +30,7 @@ public class Playlist {
     @JoinTable(name = "playlists_songs",
             joinColumns = { @JoinColumn(name = "playlist_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
-    private Set<Song> songsInPlaylist = new HashSet<>();
+    private List<Song> songsInPlaylist = new LinkedList<>();
 
     public Integer getId() {
         return id;
@@ -82,11 +84,11 @@ public class Playlist {
         this.subscribedUsers = users;
     }
 
-    public Set<Song> getSongsInPlaylist() {
+    public List<Song> getSongsInPlaylist() {
         return songsInPlaylist;
     }
 
-    public void setSongsInPlaylist(Set<Song> songsInPlaylist) {
+    public void setSongsInPlaylist(List<Song> songsInPlaylist) {
         this.songsInPlaylist = songsInPlaylist;
     }
 
@@ -111,6 +113,10 @@ public class Playlist {
     }
 
     public void addSong(Song song) {
+        if(songsInPlaylist.contains(song)){
+            throw new IllegalArgumentException("Song already in the playlist");
+        }
+
         songsInPlaylist.add(song);
         song.getPlaylists().add(this);
     }

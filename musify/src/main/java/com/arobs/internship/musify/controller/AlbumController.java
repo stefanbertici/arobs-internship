@@ -1,6 +1,7 @@
 package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
+import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +20,9 @@ public class AlbumController {
         this.albumService = albumService;
     }
 
-    @GetMapping("/albums/artist/{id}")
-    public ResponseEntity<List<AlbumDTO>> readAlbumsByArtistId(@PathVariable Integer id) {
-        return new ResponseEntity<>(albumService.readAlbumsByArtistId(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/albums/band/{id}")
-    public ResponseEntity<List<AlbumDTO>> readAlbumsByBandId(@PathVariable Integer id) {
-        return new ResponseEntity<>(albumService.readAlbumsByBandId(id), HttpStatus.OK);
+    @GetMapping("/album/{id}/songs")
+    public ResponseEntity<List<SongViewDTO>> readSongsByAlbumId(@PathVariable Integer id) {
+        return new ResponseEntity<>(albumService.readSongsByAlbumId(id), HttpStatus.OK);
     }
 
     @PostMapping("/album")

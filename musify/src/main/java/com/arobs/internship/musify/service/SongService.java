@@ -1,13 +1,11 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.SongDTO;
-import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.*;
 import com.arobs.internship.musify.repository.*;
-import com.arobs.internship.musify.security.JwtUtils;
 import com.arobs.internship.musify.utils.UserChecks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,66 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class SongService {
     private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
     private final AlternativeSongTitleRepository alternativeSongTitleRepository;
-    private final PlaylistRepository playlistRepository;
     private final AlbumRepository albumRepository;
-    private final UserRepository userRepository;
     private final SongMapper songMapper;
 
     @Autowired
-    public SongService(SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository, PlaylistRepository playlistRepository, AlbumRepository albumRepository, UserRepository userRepository) {
+    public SongService(SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository, AlbumRepository albumRepository) {
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
         this.alternativeSongTitleRepository = alternativeSongTitleRepository;
         this.songMapper = songMapper;
-        this.playlistRepository = playlistRepository;
         this.albumRepository = albumRepository;
-        this.userRepository = userRepository;
-    }
-
-    @Transactional
-    public List<SongViewDTO> readSongsByPlaylistId(Integer id) {
-        Optional<Playlist> optional = playlistRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no playlist with id = " + id);
-        }
-
-        User user = userRepository.findById(JwtUtils.getCurrentUserId())
-                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
-        Playlist playlist = optional.get();
-
-        if (playlist.getType().equals("private") && playlist.getOwnerUserId().intValue() != user.getId().intValue()) {
-            throw new UnauthorizedException("You cannot view this private playlist");
-        }
-
-        Set<Song> songs = optional.get().getSongsInPlaylist();
-
-        return songs
-                .stream()
-                .map(songMapper::toViewDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public List<SongViewDTO> readSongsByAlbumId(Integer id) {
-        Optional<Album> optional = albumRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no album with id = " + id);
-        }
-
-        Set<Song> songs = optional.get().getSongs();
-
-        return songs
-                .stream()
-                .map(songMapper::toViewDto)
-                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -160,8 +114,4 @@ public class SongService {
 
         song.getAlternativeSongTitles().clear();
     }
-
-    /*public List<Song> getSongs() {
-        return songRepository.findAll();
-    }*/
 }

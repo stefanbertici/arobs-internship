@@ -1,9 +1,11 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.PlaylistDTO;
+import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.PlaylistMapper;
+import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.*;
 import com.arobs.internship.musify.repository.*;
 import com.arobs.internship.musify.security.JwtUtils;
@@ -25,14 +27,16 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository;
     private final PlaylistMapper playlistMapper;
+    private final SongMapper songMapper;
 
     @Autowired
-    public PlaylistService(AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository, UserRepository userRepository, PlaylistMapper playlistMapper) {
+    public PlaylistService(AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository, UserRepository userRepository, PlaylistMapper playlistMapper, SongMapper songMapper) {
         this.albumRepository = albumRepository;
         this.songRepository = songRepository;
         this.playlistRepository = playlistRepository;
         this.userRepository = userRepository;
         this.playlistMapper = playlistMapper;
+        this.songMapper = songMapper;
     }
 
     @Transactional
@@ -50,6 +54,29 @@ public class PlaylistService {
         followedPlaylists.forEach(playlist -> result.add(playlistMapper.toDto(playlist)));
 
         return result;
+    }
+
+    @Transactional
+    public List<SongViewDTO> readSongsByPlaylistId(Integer id) {
+        Optional<Playlist> optional = playlistRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no playlist with id = " + id);
+        }
+
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
+        Playlist playlist = optional.get();
+
+        if (playlist.getType().equals("private") && playlist.getOwnerUserId().intValue() != user.getId().intValue()) {
+            throw new UnauthorizedException("You cannot view this private playlist");
+        }
+
+        List<Song> songs = optional.get().getSongsInPlaylist();
+
+        return songs
+                .stream()
+                .map(songMapper::toViewDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -176,7 +203,9 @@ public class PlaylistService {
 
         Album album = optionalAlbum.get();
         for (Song song : album.getSongs()) {
-            playlist.addSong(song);
+            if (!playlist.getSongsInPlaylist().contains(song)) {
+                playlist.addSong(song);
+            }
         }
 
         playlist = playlistRepository.save(playlist);

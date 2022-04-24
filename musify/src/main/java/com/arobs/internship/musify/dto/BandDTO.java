@@ -1,7 +1,6 @@
 package com.arobs.internship.musify.dto;
 
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BandDTO {

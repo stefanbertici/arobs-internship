@@ -1,9 +1,11 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
+import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.AlbumMapper;
+import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.Album;
 import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,43 +30,30 @@ public class AlbumService {
     private final ArtistRepository artistRepository;
     private final BandRepository bandRepository;
     private final AlbumMapper albumMapper;
+    private final SongMapper songMapper;
 
     @Autowired
-    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, ArtistRepository artistRepository, BandRepository bandRepository) {
+    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, ArtistRepository artistRepository, BandRepository bandRepository, SongMapper songMapper) {
         this.albumRepository = albumRepository;
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
         this.bandRepository = bandRepository;
         this.albumMapper = albumMapper;
+        this.songMapper = songMapper;
     }
 
     @Transactional
-    public List<AlbumDTO> readAlbumsByArtistId(Integer id) {
-        Optional<Artist> optional = artistRepository.findById(id);
+    public List<SongViewDTO> readSongsByAlbumId(Integer id) {
+        Optional<Album> optional = albumRepository.findById(id);
         if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no artist with id = " + id);
+            throw new ResourceNotFoundException("There is no album with id = " + id);
         }
 
-        Set<Album> albums = optional.get().getArtistAlbums();
+        List<Song> songs = optional.get().getSongs();
 
-        return albums
+        return songs
                 .stream()
-                .map(albumMapper::toDto)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional
-    public List<AlbumDTO> readAlbumsByBandId(Integer id) {
-        Optional<Band> optional = bandRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no band with id = " + id);
-        }
-
-        Set<Album> albums = optional.get().getBandAlbums();
-
-        return albums
-                .stream()
-                .map(albumMapper::toDto)
+                .map(songMapper::toViewDto)
                 .collect(Collectors.toList());
     }
 
