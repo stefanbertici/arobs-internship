@@ -147,6 +147,7 @@ public class PlaylistService {
 
         Song song = optionalSong.get();
         playlist.addSong(song);
+        playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
         playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
@@ -175,6 +176,7 @@ public class PlaylistService {
 
         Song song = optionalSong.get();
         playlist.removeSong(song);
+        playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
         playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
@@ -208,7 +210,50 @@ public class PlaylistService {
             }
         }
 
+        playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
         playlist = playlistRepository.save(playlist);
+
+        return playlistMapper.toDto(playlist);
+    }
+
+    public PlaylistDTO changeSongOrder(Integer playlistId, Integer songId, Integer oldPosition, Integer newPosition) {
+        Optional<Playlist> optionalPlaylist = playlistRepository.findById(playlistId);
+        Optional<Song> optionalSong = songRepository.findById(songId);
+
+        if (optionalPlaylist.isEmpty()) {
+            throw new ResourceNotFoundException("There is no playlist with id = " + playlistId);
+        }
+
+        if (optionalSong.isEmpty()) {
+            throw new ResourceNotFoundException("There is no song with id = " + songId);
+        }
+
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
+        Playlist playlist = optionalPlaylist.get();
+
+        if (user.getId().intValue() != playlist.getOwnerUserId().intValue()) {
+            throw new UnauthorizedException("You can't modify playlists you do not own");
+        }
+
+        List<Song> songs = playlist.getSongsInPlaylist();
+        if (oldPosition < 1 || oldPosition > songs.size() || newPosition < 1 || newPosition > songs.size()) {
+            throw new IllegalArgumentException("The given positions are not in range.");
+        }
+
+        if (songs.get(oldPosition - 1).getId().intValue() != songId.intValue()) {
+            throw new IllegalArgumentException("The song introduced is not in the correct position");
+        }
+
+        if (!oldPosition.equals(newPosition)) {
+            Song song = songs.get(oldPosition - 1);
+            songs.remove(song);
+            songs.add(newPosition - 1, song);
+            playlist.setSongsInPlaylist(songs);
+            playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
+
+            playlistRepository.save(playlist);
+        }
 
         return playlistMapper.toDto(playlist);
     }

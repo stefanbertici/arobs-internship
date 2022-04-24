@@ -60,6 +60,11 @@ public class PlaylistController {
         return new ResponseEntity<>(playlistService.addAlbumToPlaylist(playlistId, albumId), HttpStatus.OK);
     }
 
+    @PostMapping("/playlist/{playlistId}/changeSongOrder")
+    public ResponseEntity<PlaylistDTO> changeSongOrder(@PathVariable Integer playlistId,@RequestParam Integer songId,@RequestParam Integer oldPosition,@RequestParam Integer newPosition){
+        return new ResponseEntity<>(playlistService.changeSongOrder(playlistId, songId, oldPosition, newPosition), HttpStatus.OK);
+    }
+
     @PostMapping("/playlist/{id}/follow")
     public ResponseEntity<String> followPlaylist(@PathVariable Integer id) {
         return new ResponseEntity<>(playlistService.followPlaylist(id), HttpStatus.OK);

@@ -30,6 +30,7 @@ public class Playlist {
     @JoinTable(name = "playlists_songs",
             joinColumns = { @JoinColumn(name = "playlist_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
+    @OrderColumn(name = "song_order")
     private List<Song> songsInPlaylist = new LinkedList<>();
 
     public Integer getId() {
