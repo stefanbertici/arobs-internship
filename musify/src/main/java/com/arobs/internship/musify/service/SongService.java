@@ -1,28 +1,29 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.SongDTO;
-import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.*;
 import com.arobs.internship.musify.repository.*;
-import com.arobs.internship.musify.utils.UserChecks;
+import com.arobs.internship.musify.utils.RepositoryChecker;
+import com.arobs.internship.musify.utils.UserChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SongService {
+    private final RepositoryChecker repositoryChecker;
     private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
     private final AlternativeSongTitleRepository alternativeSongTitleRepository;
     private final SongMapper songMapper;
 
     @Autowired
-    public SongService(SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository) {
+    public SongService(RepositoryChecker repositoryChecker, SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository) {
+        this.repositoryChecker = repositoryChecker;
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
         this.alternativeSongTitleRepository = alternativeSongTitleRepository;
@@ -31,7 +32,7 @@ public class SongService {
 
     @Transactional
     public SongDTO createSong(SongDTO songDTO) {
-        if (UserChecks.isCurrentUserNotAdmin()) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new songs");
         }
 
@@ -51,16 +52,12 @@ public class SongService {
 
     @Transactional
     public SongDTO updateSong(Integer id, SongDTO songDTO) {
-        if (UserChecks.isCurrentUserNotAdmin()) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update songs");
         }
 
-        Optional<Song> optional = songRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no song with id = " + id);
-        }
+        Song song = repositoryChecker.getSongIfExists(id);
 
-        Song song = optional.get();
         song.setTitle(songDTO.getTitle());
         song.setDuration(songDTO.getDuration());
         song.setCreatedDate(songDTO.getCreatedDate());

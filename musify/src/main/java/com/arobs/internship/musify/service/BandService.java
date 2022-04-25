@@ -2,7 +2,6 @@ package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.BandDTO;
-import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.AlbumMapper;
 import com.arobs.internship.musify.mapper.BandMapper;
@@ -11,25 +10,27 @@ import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
 import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
-import com.arobs.internship.musify.utils.UserChecks;
+import com.arobs.internship.musify.utils.RepositoryChecker;
+import com.arobs.internship.musify.utils.UserChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class BandService {
+    private final RepositoryChecker repositoryChecker;
     private final BandRepository bandRepository;
     private final ArtistRepository artistRepository;
     private final BandMapper bandMapper;
     private final AlbumMapper albumMapper;
 
     @Autowired
-    public BandService(BandRepository bandRepository, BandMapper bandMapper, ArtistRepository artistRepository, AlbumMapper albumMapper) {
+    public BandService(RepositoryChecker repositoryChecker, BandRepository bandRepository, BandMapper bandMapper, ArtistRepository artistRepository, AlbumMapper albumMapper) {
+        this.repositoryChecker = repositoryChecker;
         this.bandRepository = bandRepository;
         this.artistRepository = artistRepository;
         this.bandMapper = bandMapper;
@@ -38,12 +39,9 @@ public class BandService {
 
     @Transactional
     public List<AlbumDTO> readAlbumsByBandId(Integer id) {
-        Optional<Band> optional = bandRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no band with id = " + id);
-        }
+        Band band = repositoryChecker.getBandIfExists(id);
 
-        Set<Album> albums = optional.get().getBandAlbums();
+        Set<Album> albums = band.getBandAlbums();
 
         return albums
                 .stream()
@@ -53,7 +51,7 @@ public class BandService {
 
     @Transactional
     public BandDTO createBand(BandDTO bandDTO) {
-        if (UserChecks.isCurrentUserNotAdmin()) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new bands");
         }
 
@@ -69,16 +67,12 @@ public class BandService {
 
     @Transactional
     public BandDTO updateBand(Integer id, BandDTO bandDTO) {
-        if (UserChecks.isCurrentUserNotAdmin()) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update bands");
         }
 
-        Optional<Band> optional = bandRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no band with id = " + id);
-        }
+        Band band = repositoryChecker.getBandIfExists(id);
 
-        Band band = optional.get();
         band.setBandName(bandDTO.getBandName());
         band.setLocation(bandDTO.getLocation());
         band.setActivityStartDate(bandDTO.getActivityStartDate());

@@ -2,7 +2,6 @@ package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.SongViewDTO;
-import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.AlbumMapper;
 import com.arobs.internship.musify.mapper.SongMapper;
@@ -14,17 +13,18 @@ import com.arobs.internship.musify.repository.AlbumRepository;
 import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.repository.SongRepository;
-import com.arobs.internship.musify.utils.UserChecks;
+import com.arobs.internship.musify.utils.RepositoryChecker;
+import com.arobs.internship.musify.utils.UserChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class AlbumService {
+    private final RepositoryChecker repositoryChecker;
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
@@ -33,7 +33,8 @@ public class AlbumService {
     private final SongMapper songMapper;
 
     @Autowired
-    public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, ArtistRepository artistRepository, BandRepository bandRepository, SongMapper songMapper) {
+    public AlbumService(RepositoryChecker repositoryChecker, AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, ArtistRepository artistRepository, BandRepository bandRepository, SongMapper songMapper) {
+        this.repositoryChecker = repositoryChecker;
         this.albumRepository = albumRepository;
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
@@ -44,12 +45,8 @@ public class AlbumService {
 
     @Transactional
     public List<SongViewDTO> readSongsByAlbumId(Integer id) {
-        Optional<Album> optional = albumRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no album with id = " + id);
-        }
-
-        List<Song> songs = optional.get().getSongs();
+        Album album = repositoryChecker.getAlbumIfExists(id);
+        List<Song> songs = album.getSongs();
 
         return songs
                 .stream()
@@ -59,7 +56,7 @@ public class AlbumService {
 
     @Transactional
     public AlbumDTO createAlbum(AlbumDTO albumDTO) {
-        if (UserChecks.isCurrentUserNotAdmin()) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new albums");
         }
 
@@ -80,7 +77,7 @@ public class AlbumService {
 
     @Transactional
     public AlbumDTO updateAlbum(Integer id, AlbumDTO albumDTO) {
-        if (UserChecks.isCurrentUserNotAdmin()) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update albums");
         }
 
@@ -88,12 +85,8 @@ public class AlbumService {
             throw new IllegalArgumentException("One of artist id or band id must be set, the other must remain null");
         }
 
-        Optional<Album> optional = albumRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no album with id = " + id);
-        }
+        Album album = repositoryChecker.getAlbumIfExists(id);
 
-        Album album = optional.get();
         addArtistOrBandById(album, albumDTO);
         album.setTitle(albumDTO.getTitle());
         album.setDescription(albumDTO.getDescription());
@@ -126,24 +119,12 @@ public class AlbumService {
     private void addArtistOrBandById(Album album, AlbumDTO albumDTO) {
         if (albumDTO.getArtistId() != null && albumDTO.getArtistId() != 0) {
             Integer id = albumDTO.getArtistId();
-            Optional<Artist> optional = artistRepository.findById(id);
-
-            if (optional.isEmpty()) {
-                throw new ResourceNotFoundException("There is no artist with id = " + id);
-            }
-
-            Artist artist = optional.get();
+            Artist artist = repositoryChecker.getArtistIfExists(id);
             album.setArtist(artist);
             album.setBand(null);
         } else if (albumDTO.getBandId() != null && albumDTO.getBandId() != 0) {
             Integer id = albumDTO.getBandId();
-            Optional<Band> optional = bandRepository.findById(id);
-
-            if (optional.isEmpty()) {
-                throw new ResourceNotFoundException("There is no band with id = " + id);
-            }
-
-            Band band = optional.get();
+            Band band = repositoryChecker.getBandIfExists(id);
             album.setBand(band);
             album.setArtist(null);
         }
