@@ -23,18 +23,14 @@ import java.util.stream.Collectors;
 @Service
 public class PlaylistService {
     private final RepositoryChecker repositoryChecker;
-    private final AlbumRepository albumRepository;
-    private final SongRepository songRepository;
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository;
     private final PlaylistMapper playlistMapper;
     private final SongMapper songMapper;
 
     @Autowired
-    public PlaylistService(RepositoryChecker repositoryChecker, AlbumRepository albumRepository, SongRepository songRepository, PlaylistRepository playlistRepository, UserRepository userRepository, PlaylistMapper playlistMapper, SongMapper songMapper) {
+    public PlaylistService(RepositoryChecker repositoryChecker, PlaylistRepository playlistRepository, UserRepository userRepository, PlaylistMapper playlistMapper, SongMapper songMapper) {
         this.repositoryChecker = repositoryChecker;
-        this.albumRepository = albumRepository;
-        this.songRepository = songRepository;
         this.playlistRepository = playlistRepository;
         this.userRepository = userRepository;
         this.playlistMapper = playlistMapper;
@@ -61,7 +57,6 @@ public class PlaylistService {
     @Transactional
     public List<SongViewDTO> readSongsByPlaylistId(Integer id) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(id);
-
 
         if (playlist.getType().equals("private") && UserChecker.isCurrentUserNotOwnerOfPlaylist(playlist)) {
             throw new UnauthorizedException("You cannot view this private playlist");

@@ -10,8 +10,6 @@ import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
 import com.arobs.internship.musify.model.Song;
 import com.arobs.internship.musify.repository.AlbumRepository;
-import com.arobs.internship.musify.repository.ArtistRepository;
-import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.repository.SongRepository;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
@@ -27,18 +25,14 @@ public class AlbumService {
     private final RepositoryChecker repositoryChecker;
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
-    private final ArtistRepository artistRepository;
-    private final BandRepository bandRepository;
     private final AlbumMapper albumMapper;
     private final SongMapper songMapper;
 
     @Autowired
-    public AlbumService(RepositoryChecker repositoryChecker, AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, ArtistRepository artistRepository, BandRepository bandRepository, SongMapper songMapper) {
+    public AlbumService(RepositoryChecker repositoryChecker, AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, SongMapper songMapper) {
         this.repositoryChecker = repositoryChecker;
         this.albumRepository = albumRepository;
         this.songRepository = songRepository;
-        this.artistRepository = artistRepository;
-        this.bandRepository = bandRepository;
         this.albumMapper = albumMapper;
         this.songMapper = songMapper;
     }
