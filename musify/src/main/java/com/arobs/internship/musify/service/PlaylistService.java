@@ -1,6 +1,7 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.PlaylistDTO;
+import com.arobs.internship.musify.dto.PlaylistViewDTO;
 import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.PlaylistMapper;
@@ -157,7 +158,7 @@ public class PlaylistService {
         return playlistMapper.toDto(playlist);
     }
 
-    public PlaylistDTO changeSongOrder(Integer playlistId, Integer songId, Integer oldPosition, Integer newPosition) {
+    public PlaylistViewDTO changeSongOrder(Integer playlistId, Integer songId, Integer oldPosition, Integer newPosition) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(playlistId);
         Song song = repositoryChecker.getSongIfExists(songId);
 
@@ -181,7 +182,7 @@ public class PlaylistService {
             playlistRepository.save(playlist);
         }
 
-        return playlistMapper.toDto(playlist);
+        return playlistMapper.toViewDto(playlist);
     }
 
     @Transactional

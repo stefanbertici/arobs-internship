@@ -1,6 +1,7 @@
 package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.PlaylistDTO;
+import com.arobs.internship.musify.dto.PlaylistViewDTO;
 import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class PlaylistController {
     }
 
     @PostMapping("/playlist/{playlistId}/changeSongOrder")
-    public ResponseEntity<PlaylistDTO> changeSongOrder(@PathVariable Integer playlistId,@RequestParam Integer songId,@RequestParam Integer oldPosition,@RequestParam Integer newPosition){
+    public ResponseEntity<PlaylistViewDTO> changeSongOrder(@PathVariable Integer playlistId, @RequestParam Integer songId, @RequestParam Integer oldPosition, @RequestParam Integer newPosition){
         return new ResponseEntity<>(playlistService.changeSongOrder(playlistId, songId, oldPosition, newPosition), HttpStatus.OK);
     }
 
