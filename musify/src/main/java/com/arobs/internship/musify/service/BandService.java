@@ -58,11 +58,11 @@ public class BandService {
         }
 
         Band band = bandMapper.toEntity(bandDTO);
+        band = bandRepository.save(band);
+
         if (!bandDTO.getBandMembersIds().isEmpty()) {
             addMembersById(band, bandDTO);
         }
-
-        band = bandRepository.save(band);
 
         return bandMapper.toDto(band);
     }
@@ -83,12 +83,11 @@ public class BandService {
         band.setLocation(bandDTO.getLocation());
         band.setActivityStartDate(bandDTO.getActivityStartDate());
         band.setActivityEndDate(bandDTO.getActivityEndDate());
+
         if (!bandDTO.getBandMembersIds().isEmpty()) {
             clearMembers(band);
             addMembersById(band, bandDTO);
         }
-
-        band = bandRepository.save(band);
 
         return bandMapper.toDto(band);
     }

@@ -71,13 +71,13 @@ public class ArtistService {
         }
 
         Artist artist = optional.get();
+
         artist.setFirstName(artistDTO.getFirstName());
         artist.setLastName(artistDTO.getLastName());
         artist.setStageName(artistDTO.getStageName());
         artist.setBirthday(artistDTO.getBirthday());
         artist.setActivityStartDate(artistDTO.getActivityStartDate());
         artist.setActivityEndDate(artistDTO.getActivityEndDate());
-        artistRepository.save(artist);
 
         return artistMapper.toDto(artist);
     }

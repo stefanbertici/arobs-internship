@@ -2,7 +2,7 @@ package com.arobs.internship.musify.model;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +32,7 @@ public class Album {
             joinColumns = { @JoinColumn(name = "album_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
     @OrderColumn(name = "song_order")
-    private List<Song> songs = new LinkedList<>();
+    private List<Song> songs = new ArrayList<>();
 
     public Integer getId() {
         return id;

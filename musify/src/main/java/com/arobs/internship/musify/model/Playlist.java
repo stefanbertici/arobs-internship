@@ -2,10 +2,7 @@ package com.arobs.internship.musify.model;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "playlists")
@@ -31,7 +28,7 @@ public class Playlist {
             joinColumns = { @JoinColumn(name = "playlist_id") },
             inverseJoinColumns = { @JoinColumn(name = "song_id") })
     @OrderColumn(name = "song_order")
-    private List<Song> songsInPlaylist = new LinkedList<>();
+    private List<Song> songsInPlaylist = new ArrayList<>();
 
     public Integer getId() {
         return id;

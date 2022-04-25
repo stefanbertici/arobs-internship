@@ -19,16 +19,14 @@ public class SongService {
     private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
     private final AlternativeSongTitleRepository alternativeSongTitleRepository;
-    private final AlbumRepository albumRepository;
     private final SongMapper songMapper;
 
     @Autowired
-    public SongService(SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository, AlbumRepository albumRepository) {
+    public SongService(SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository) {
         this.songRepository = songRepository;
         this.artistRepository = artistRepository;
         this.alternativeSongTitleRepository = alternativeSongTitleRepository;
         this.songMapper = songMapper;
-        this.albumRepository = albumRepository;
     }
 
     @Transactional
@@ -38,6 +36,8 @@ public class SongService {
         }
 
         Song song = songMapper.toEntity(songDTO);
+        song = songRepository.save(song);
+
         if (!songDTO.getAlternativeTitles().isEmpty()) {
             addAlternativeTitles(song, songDTO);
         }
@@ -45,8 +45,6 @@ public class SongService {
         if (!songDTO.getComposersIds().isEmpty()) {
             addComposersById(song, songDTO);
         }
-
-        song = songRepository.save(song);
 
         return songMapper.toDto(song);
     }
@@ -66,6 +64,7 @@ public class SongService {
         song.setTitle(songDTO.getTitle());
         song.setDuration(songDTO.getDuration());
         song.setCreatedDate(songDTO.getCreatedDate());
+
         if (!songDTO.getAlternativeTitles().isEmpty()) {
             clearAlternativeTitles(song);
             addAlternativeTitles(song, songDTO);
@@ -75,8 +74,6 @@ public class SongService {
             clearComposers(song);
             addComposersById(song, songDTO);
         }
-        
-        songRepository.save(song);
 
         return songMapper.toDto(song);
     }

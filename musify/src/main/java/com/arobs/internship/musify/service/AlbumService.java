@@ -68,12 +68,13 @@ public class AlbumService {
         }
 
         Album album = albumMapper.toEntity(albumDTO);
+        album = albumRepository.save(album);
+
         addArtistOrBandById(album, albumDTO);
         if (!albumDTO.getSongIds().isEmpty()) {
             addSongsById(album, albumDTO);
         }
 
-        album = albumRepository.save(album);
         return albumMapper.toDto(album);
     }
 
@@ -104,7 +105,6 @@ public class AlbumService {
             addSongsById(album, albumDTO);
         }
 
-        albumRepository.save(album);
         return albumMapper.toDto(album);
     }
 

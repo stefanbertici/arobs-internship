@@ -43,6 +43,7 @@ public class PlaylistService {
     public List<PlaylistDTO> readUserPlaylists() {
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
                 .orElseThrow(() -> new UnauthorizedException("You need to log in"));
+
         Set<Playlist> ownedPlaylists = user.getOwnedPlaylists();
         Set<Playlist> followedPlaylists = user.getSubscribedToPlaylists();
 
@@ -81,32 +82,32 @@ public class PlaylistService {
 
     @Transactional
     public PlaylistDTO createPlaylist(PlaylistDTO playlistDTO) {
-        Playlist playlist = playlistMapper.toEntity(playlistDTO);
-        User user = userRepository.findById(JwtUtils.getCurrentUserId())
-                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
-
         if (!playlistDTO.isPrivateOrPublic()) {
             throw new IllegalArgumentException("Playlist type must be \"private\" or \"public\"");
         }
 
+        Playlist playlist = playlistMapper.toEntity(playlistDTO);
+        User user = userRepository.findById(JwtUtils.getCurrentUserId())
+                .orElseThrow(() -> new UnauthorizedException("You need to log in"));
+
+        playlist = playlistRepository.save(playlist);
+
         playlist.setCreatedDate(Date.valueOf(LocalDate.now()));
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
         playlist.setOwnerUser(user);
-        playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
     }
 
     @Transactional
     public PlaylistDTO updatePlaylist(Integer id, PlaylistDTO playlistDTO) {
-        Optional<Playlist> optional = playlistRepository.findById(id);
-
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no playlist with id = " + id);
-        }
-
         if (!playlistDTO.isPrivateOrPublic()) {
             throw new IllegalArgumentException("Playlist type must be \"private\" or \"public\"");
+        }
+
+        Optional<Playlist> optional = playlistRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no playlist with id = " + id);
         }
 
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
@@ -119,7 +120,6 @@ public class PlaylistService {
 
         playlist.setType(playlistDTO.getType());
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
-        playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
     }
@@ -148,7 +148,6 @@ public class PlaylistService {
         Song song = optionalSong.get();
         playlist.addSong(song);
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
-        playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
     }
@@ -177,7 +176,6 @@ public class PlaylistService {
         Song song = optionalSong.get();
         playlist.removeSong(song);
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
-        playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
     }
@@ -211,7 +209,6 @@ public class PlaylistService {
         }
 
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
-        playlist = playlistRepository.save(playlist);
 
         return playlistMapper.toDto(playlist);
     }
@@ -249,9 +246,7 @@ public class PlaylistService {
             Song song = songs.get(oldPosition - 1);
             songs.remove(song);
             songs.add(newPosition - 1, song);
-            playlist.setSongsInPlaylist(songs);
             playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
-
             playlistRepository.save(playlist);
         }
 
@@ -292,12 +287,16 @@ public class PlaylistService {
                 .orElseThrow(() -> new UnauthorizedException("You need to log in"));
         Playlist playlist = optional.get();
 
+        if (playlist.getSubscribedUsers().contains(user)) {
+            throw new UnauthorizedException("You already follow this playlist");
+        }
+
         if (!playlist.getType().equals("public")) {
             throw new UnauthorizedException("Private playlist cannot be followed");
         }
 
         if (playlist.getOwnerUserId().intValue() == user.getId().intValue()) {
-            throw new UnauthorizedException("Your own playlist cannot be followed");
+            throw new UnauthorizedException("You cannot follow your own playlist");
         }
 
         user.subscribeToPlaylist(playlist);
@@ -318,7 +317,7 @@ public class PlaylistService {
         Playlist playlist = optional.get();
 
         if (!playlist.getSubscribedUsers().contains(user)) {
-            throw new UnauthorizedException("You aren't subscribed to this playlist");
+            throw new UnauthorizedException("You have not followed this playlist");
         }
 
         user.unsubscribeFromPlaylist(playlist);

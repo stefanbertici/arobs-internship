@@ -60,11 +60,12 @@ public class UserService {
         }
 
         User user = userMapper.toEntity(userDTO);
+        user = userRepository.save(user);
+
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setRole("user");
         user.setStatus("active");
-        user = userRepository.save(user);
 
         return userMapper.toViewDto(user);
     }
@@ -73,6 +74,7 @@ public class UserService {
     public String loginUser(UserLoginDTO userLoginDTO) {
         Optional<User> optional = userRepository.findUserByEmail(userLoginDTO.getEmail());
         String encryptedInputPassword = getEncryptedPassword(userLoginDTO.getPassword());
+
         if (optional.isEmpty()) {
             throw new UnauthorizedException("Incorrect email or password");
         }
@@ -113,7 +115,6 @@ public class UserService {
         String encryptedPassword = getEncryptedPassword(userDTO.getPassword());
         user.setEncryptedPassword(encryptedPassword);
         user.setCountry(userDTO.getCountry());
-        user = userRepository.save(user);
 
         return userMapper.toViewDto(user);
     }
@@ -139,7 +140,6 @@ public class UserService {
 
         User user = optional.get();
         user.setRole(newRole);
-        userRepository.save(user);
 
         return userMapper.toViewDto(user);
     }
@@ -165,7 +165,6 @@ public class UserService {
 
         User user = optional.get();
         user.setStatus(newStatus);
-        userRepository.save(user);
 
         return userMapper.toViewDto(user);
     }
