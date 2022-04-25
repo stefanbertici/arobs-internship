@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,12 +42,9 @@ public class BandService {
     public List<AlbumDTO> readAlbumsByBandId(Integer id) {
         Band band = repositoryChecker.getBandIfExists(id);
 
-        Set<Album> albums = band.getBandAlbums();
+        List<Album> albums = new ArrayList<>(band.getBandAlbums());
 
-        return albums
-                .stream()
-                .map(albumMapper::toDto)
-                .collect(Collectors.toList());
+        return albumMapper.toDtos(albums);
     }
 
     @Transactional

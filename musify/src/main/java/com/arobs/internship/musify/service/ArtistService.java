@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,12 +38,9 @@ public class ArtistService {
     public List<AlbumDTO> readAlbumsByArtistId(Integer id) {
         Artist artist = repositoryChecker.getArtistIfExists(id);
 
-        Set<Album> albums = artist.getArtistAlbums();
+        List<Album> albums = new ArrayList<>(artist.getArtistAlbums());
 
-        return albums
-                .stream()
-                .map(albumMapper::toDto)
-                .collect(Collectors.toList());
+        return albumMapper.toDtos(albums);
     }
 
     @Transactional

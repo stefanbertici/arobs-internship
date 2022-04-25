@@ -29,6 +29,15 @@ public class RepositoryChecker {
         this.songRepository = songRepository;
     }
 
+    public User getUserIfExists(Integer id) {
+        Optional<User> optional = userRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new ResourceNotFoundException("There is no user with id = " + id);
+        }
+
+        return optional.get();
+    }
+
     public User getCurrentUser() {
         Optional<User> optional = userRepository.findById(JwtUtils.getCurrentUserId());
         if (optional.isEmpty()) {

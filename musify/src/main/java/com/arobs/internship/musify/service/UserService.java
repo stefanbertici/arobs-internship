@@ -1,16 +1,15 @@
 package com.arobs.internship.musify.service;
 
-import com.arobs.internship.musify.exception.ResourceNotFoundException;
 import com.arobs.internship.musify.mapper.UserMapper;
 import com.arobs.internship.musify.dto.UserDTO;
 import com.arobs.internship.musify.dto.UserLoginDTO;
 import com.arobs.internship.musify.dto.UserViewDTO;
 import com.arobs.internship.musify.exception.UnauthorizedException;
-import com.arobs.internship.musify.mapper.UserMapperImpl;
 import com.arobs.internship.musify.model.User;
 import com.arobs.internship.musify.repository.UserRepository;
 import com.arobs.internship.musify.security.InMemoryTokenBlacklist;
 import com.arobs.internship.musify.security.JwtUtils;
+import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,32 +23,31 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
+    private final RepositoryChecker repositoryChecker;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final InMemoryTokenBlacklist inMemoryTokenBlacklist;
 
     @Autowired
-    public UserService(UserRepository userRepository, InMemoryTokenBlacklist inMemoryTokenBlacklist) {
+    public UserService(RepositoryChecker repositoryChecker, UserRepository userRepository, UserMapper userMapper, InMemoryTokenBlacklist inMemoryTokenBlacklist) {
+        this.repositoryChecker = repositoryChecker;
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
         this.inMemoryTokenBlacklist = inMemoryTokenBlacklist;
-        this.userMapper = new UserMapperImpl();
     }
 
     @Transactional
     public List<UserViewDTO> readAllUsers() {
         List<User> users = userRepository.findAll();
+
         return userMapper.toViewDtos(users);
     }
 
     @Transactional
     public UserViewDTO readUserById(int id) {
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no user with id = " + id);
-        }
+        User user = repositoryChecker.getUserIfExists(id);
 
-        return userMapper.toViewDto(optional.get());
+        return userMapper.toViewDto(user);
     }
 
     @Transactional
@@ -99,16 +97,12 @@ public class UserService {
 
     @Transactional
     public UserViewDTO updateUser(Integer id, UserDTO userDTO) {
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no user with id = " + id);
-        }
+        User user = repositoryChecker.getUserIfExists(id);
 
         if (UserChecker.isCurrentUserNotAdmin() && !UserChecker.isOperationOnSelf(id)) {
             throw new UnauthorizedException("Users can only update their own info");
         }
 
-        User user = optional.get();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
@@ -133,12 +127,7 @@ public class UserService {
             newRole = "user";
         }
 
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no user with id = " + id);
-        }
-
-        User user = optional.get();
+        User user = repositoryChecker.getUserIfExists(id);
         user.setRole(newRole);
 
         return userMapper.toViewDto(user);
@@ -158,12 +147,7 @@ public class UserService {
             newStatus = "inactive";
         }
 
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isEmpty()) {
-            throw new ResourceNotFoundException("There is no user with id = " + id);
-        }
-
-        User user = optional.get();
+        User user = repositoryChecker.getUserIfExists(id);
         user.setStatus(newStatus);
 
         return userMapper.toViewDto(user);

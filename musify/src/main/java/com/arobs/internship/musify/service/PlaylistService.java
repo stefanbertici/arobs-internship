@@ -65,10 +65,7 @@ public class PlaylistService {
 
         List<Song> songs = playlist.getSongsInPlaylist();
 
-        return songs
-                .stream()
-                .map(songMapper::toViewDto)
-                .collect(Collectors.toList());
+        return songMapper.toViewDtos(songs);
     }
 
     @Transactional

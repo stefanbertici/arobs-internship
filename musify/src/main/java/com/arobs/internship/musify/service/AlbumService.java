@@ -42,10 +42,7 @@ public class AlbumService {
         Album album = repositoryChecker.getAlbumIfExists(id);
         List<Song> songs = album.getSongs();
 
-        return songs
-                .stream()
-                .map(songMapper::toViewDto)
-                .collect(Collectors.toList());
+        return songMapper.toViewDtos(songs);
     }
 
     @Transactional
