@@ -95,7 +95,9 @@ public class AlbumService {
     private void addSongsById(Album album, AlbumDTO albumDTO) {
         List<Song> songs = (List<Song>) songRepository.findAllById(albumDTO.getSongIds());
         for (Song song : songs) {
-            album.addSong(song);
+            if (!album.getSongs().contains(song)) {
+                album.addSong(song);
+            }
         }
     }
 

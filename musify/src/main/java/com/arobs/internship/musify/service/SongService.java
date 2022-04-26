@@ -7,6 +7,7 @@ import com.arobs.internship.musify.model.*;
 import com.arobs.internship.musify.repository.*;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+//@AllArgsConstructor
 public class SongService {
     private final RepositoryChecker repositoryChecker;
     private final SongRepository songRepository;
