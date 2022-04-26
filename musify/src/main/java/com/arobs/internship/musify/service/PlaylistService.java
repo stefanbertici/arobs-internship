@@ -105,7 +105,7 @@ public class PlaylistService {
     }
 
     @Transactional
-    public PlaylistDTO addSongToPlaylist(Integer playlistId, Integer songId) {
+    public PlaylistViewDTO addSongToPlaylist(Integer playlistId, Integer songId) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(playlistId);
         Song song = repositoryChecker.getSongIfExists(songId);
 
@@ -116,11 +116,11 @@ public class PlaylistService {
         playlist.addSong(song);
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
 
-        return playlistMapper.toDto(playlist);
+        return playlistMapper.toViewDto(playlist);
     }
 
     @Transactional
-    public PlaylistDTO removeSongFromPlaylist(Integer playlistId, Integer songId) {
+    public PlaylistViewDTO removeSongFromPlaylist(Integer playlistId, Integer songId) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(playlistId);
         Song song = repositoryChecker.getSongIfExists(songId);
 
@@ -131,11 +131,11 @@ public class PlaylistService {
         playlist.removeSong(song);
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
 
-        return playlistMapper.toDto(playlist);
+        return playlistMapper.toViewDto(playlist);
     }
 
     @Transactional
-    public PlaylistDTO addAlbumToPlaylist(Integer playlistId, Integer albumId) {
+    public PlaylistViewDTO addAlbumToPlaylist(Integer playlistId, Integer albumId) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(playlistId);
         Album album = repositoryChecker.getAlbumIfExists(albumId);
 
@@ -152,7 +152,7 @@ public class PlaylistService {
 
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
 
-        return playlistMapper.toDto(playlist);
+        return playlistMapper.toViewDto(playlist);
     }
 
     public PlaylistViewDTO changeSongOrder(Integer playlistId, Integer songId, Integer oldPosition, Integer newPosition) {

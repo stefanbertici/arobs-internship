@@ -90,13 +90,13 @@ public class SongService {
         }
     }
 
+    // TODO - check if still works
     private void addAlternativeTitles(Song song, SongDTO songDTO) {
         for (String title : songDTO.getAlternativeTitles()) {
             AlternativeSongTitle newTitle = new AlternativeSongTitle();
-            newTitle.setId(0);
+            alternativeSongTitleRepository.save(newTitle);
             newTitle.setAlternativeTitle(title);
             newTitle.addSong(song);
-            alternativeSongTitleRepository.save(newTitle);
         }
     }
 

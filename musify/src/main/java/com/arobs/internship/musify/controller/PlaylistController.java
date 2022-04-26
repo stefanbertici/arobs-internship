@@ -47,17 +47,17 @@ public class PlaylistController {
     }
 
     @PostMapping("/playlist/{playlistId}/add/song/{songId}")
-    public ResponseEntity<PlaylistDTO> addSongToPlaylist(@PathVariable Integer playlistId, @PathVariable Integer songId) {
+    public ResponseEntity<PlaylistViewDTO> addSongToPlaylist(@PathVariable Integer playlistId, @PathVariable Integer songId) {
         return new ResponseEntity<>(playlistService.addSongToPlaylist(playlistId, songId), HttpStatus.OK);
     }
 
     @PostMapping("/playlist/{playlistId}/remove/song/{songId}")
-    public ResponseEntity<PlaylistDTO> removeSongFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer songId) {
+    public ResponseEntity<PlaylistViewDTO> removeSongFromPlaylist(@PathVariable Integer playlistId, @PathVariable Integer songId) {
         return new ResponseEntity<>(playlistService.removeSongFromPlaylist(playlistId, songId), HttpStatus.OK);
     }
 
     @PostMapping("/playlist/{playlistId}/add/album/{albumId}")
-    public ResponseEntity<PlaylistDTO> addAlbumToPlaylist(@PathVariable Integer playlistId, @PathVariable Integer albumId) {
+    public ResponseEntity<PlaylistViewDTO> addAlbumToPlaylist(@PathVariable Integer playlistId, @PathVariable Integer albumId) {
         return new ResponseEntity<>(playlistService.addAlbumToPlaylist(playlistId, albumId), HttpStatus.OK);
     }
 
