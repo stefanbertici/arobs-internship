@@ -68,8 +68,8 @@ public class SongService {
     }
 
     private void clearComposers(Song song) {
-        for (Artist composer : song.getComposers()) {
-            composer.getComposedSongs().remove(song);
+        for (Artist artist : song.getComposers()) {
+            artist.getComposedSongs().remove(song);
         }
 
         song.getComposers().clear();
@@ -78,26 +78,21 @@ public class SongService {
     private void addComposersById(Song song, SongDTO songDTO) {
         List<Artist> artists = (List<Artist>) artistRepository.findAllById(songDTO.getComposersIds());
         for (Artist artist : artists) {
-            song.addComposer(artist);
+            artist.addComposedSong(song);
         }
     }
 
-    // TODO - check if still works
     private void addAlternativeTitles(Song song, SongDTO songDTO) {
         for (String title : songDTO.getAlternativeTitles()) {
             AlternativeSongTitle newTitle = new AlternativeSongTitle();
-            alternativeSongTitleRepository.save(newTitle);
             newTitle.setAlternativeTitle(title);
-            newTitle.addSong(song);
+            newTitle = alternativeSongTitleRepository.save(newTitle);
+            song.addAlternativeSongTitle(newTitle);
         }
     }
 
     private void clearAlternativeTitles(Song song) {
-        for (AlternativeSongTitle title : song.getAlternativeSongTitles()) {
-            title.setSong(null);
-            alternativeSongTitleRepository.delete(title);
-        }
-
+        alternativeSongTitleRepository.deleteAll(song.getAlternativeSongTitles());
         song.getAlternativeSongTitles().clear();
     }
 }

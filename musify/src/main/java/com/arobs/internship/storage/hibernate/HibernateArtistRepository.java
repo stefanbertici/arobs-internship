@@ -1,3 +1,4 @@
+/*
 package com.arobs.internship.storage.hibernate;
 
 import com.arobs.internship.musify.dto.ArtistDTO;
@@ -185,3 +186,4 @@ public class HibernateArtistRepository {
         }
     }
 }
+*/

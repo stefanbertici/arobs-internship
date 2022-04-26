@@ -50,6 +50,7 @@ public class AlbumService {
         album = albumRepository.save(album);
 
         addArtistOrBandById(album, albumDTO);
+
         if (!albumDTO.getSongIds().isEmpty()) {
             addSongsById(album, albumDTO);
         }
@@ -75,6 +76,7 @@ public class AlbumService {
         album.setGenre(albumDTO.getGenre());
         album.setReleaseDate(albumDTO.getReleaseDate());
         album.setLabel(albumDTO.getLabel());
+
         if (!albumDTO.getSongIds().isEmpty()) {
             clearSongs(album);
             addSongsById(album, albumDTO);
@@ -100,17 +102,20 @@ public class AlbumService {
         album.getSongs().clear();
     }
 
+    // TODO clean up if works
     private void addArtistOrBandById(Album album, AlbumDTO albumDTO) {
         if (albumDTO.getArtistId() != null && albumDTO.getArtistId() != 0) {
             Integer id = albumDTO.getArtistId();
             Artist artist = repositoryChecker.getArtistIfExists(id);
-            album.setArtist(artist);
-            album.setBand(null);
+            artist.addAlbum(album);
+            //album.setArtist(artist);
+            //album.setBand(null);
         } else if (albumDTO.getBandId() != null && albumDTO.getBandId() != 0) {
             Integer id = albumDTO.getBandId();
             Band band = repositoryChecker.getBandIfExists(id);
-            album.setBand(band);
-            album.setArtist(null);
+            band.addAlbum(album);
+            //album.setBand(band);
+            //album.setArtist(null);
         }
     }
 }

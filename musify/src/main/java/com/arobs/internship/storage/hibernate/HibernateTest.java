@@ -1,3 +1,4 @@
+/*
 package com.arobs.internship.storage.hibernate;
 
 import org.hibernate.Session;
@@ -21,3 +22,4 @@ public class HibernateTest {
         HibernateUtil.shutdown();
     }
 }
+*/

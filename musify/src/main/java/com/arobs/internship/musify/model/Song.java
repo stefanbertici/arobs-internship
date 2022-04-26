@@ -1,5 +1,8 @@
 package com.arobs.internship.musify.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
@@ -8,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "songs")
 public class Song {
@@ -31,46 +36,6 @@ public class Song {
     @ManyToMany(mappedBy = "songsInPlaylist")
     private Set<Playlist> playlists = new HashSet<>();
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Time getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Time duration) {
-        this.duration = duration;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Set<AlternativeSongTitle> getAlternativeSongTitles() {
-        return alternativeSongTitles;
-    }
-
-    public void setAlternativeSongTitles(Set<AlternativeSongTitle> alternativeSongTitles) {
-        this.alternativeSongTitles = alternativeSongTitles;
-    }
-
     public List<String> getAlternativeSongTitlesList() {
         return alternativeSongTitles
                 .stream()
@@ -78,27 +43,11 @@ public class Song {
                 .collect(Collectors.toList());
     }
 
-    public Set<Album> getAlbums() {
-        return albums;
-    }
-
-    public void setAlbums(Set<Album> albums) {
-        this.albums = albums;
-    }
-
     public List<String> getAlbumsTitlesList() {
         return albums
                 .stream()
                 .map(Album::getTitle)
                 .collect(Collectors.toList());
-    }
-
-    public Set<Artist> getComposers() {
-        return composers;
-    }
-
-    public void setComposers(Set<Artist> artists) {
-        this.composers = artists;
     }
 
     public List<Integer> getComposersIdsList() {
@@ -115,14 +64,6 @@ public class Song {
                 .collect(Collectors.toList());
     }
 
-    public Set<Playlist> getPlaylists() {
-        return playlists;
-    }
-
-    public void setPlaylists(Set<Playlist> playlists) {
-        this.playlists = playlists;
-    }
-
     public void addAlternativeSongTitle(AlternativeSongTitle alternativeSongTitle) {
         alternativeSongTitles.add(alternativeSongTitle);
         alternativeSongTitle.setSong(this);
@@ -131,35 +72,5 @@ public class Song {
     public void removeAlternativeSongTitle(AlternativeSongTitle alternativeSongTitle) {
         alternativeSongTitles.remove(alternativeSongTitle);
         alternativeSongTitle.setSong(null);
-    }
-
-    public void addToAlbum(Album album) {
-        albums.add(album);
-        album.getSongs().add(this);
-    }
-
-    public void removeFromAlbum(Album album) {
-        albums.remove(album);
-        album.getSongs().remove(this);
-    }
-
-    public void addComposer(Artist artist) {
-        composers.add(artist);
-        artist.getComposedSongs().add(this);
-    }
-
-    public void removeComposer(Artist artist) {
-        composers.remove(artist);
-        artist.getComposedSongs().remove(this);
-    }
-
-    public void addToPlaylist(Playlist playlist) {
-        playlists.add(playlist);
-        playlist.getSongsInPlaylist().add(this);
-    }
-
-    public void removeFromPlaylist(Playlist playlist) {
-        playlists.remove(playlist);
-        playlist.getSongsInPlaylist().remove(this);
     }
 }

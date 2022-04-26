@@ -1,9 +1,14 @@
 package com.arobs.internship.musify.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User {
@@ -28,100 +33,20 @@ public class User {
     @JoinTable(name = "users_playlists",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "playlist_id") })
-    private Set<Playlist> subscribedToPlaylists = new HashSet<>();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEncryptedPassword() {
-        return encryptedPassword;
-    }
-
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    private Set<Playlist> followedPlaylists = new HashSet<>();
 
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
-    public Set<Playlist> getOwnedPlaylists() {
-        return ownedPlaylists;
+    public void addFollowedPlaylist(Playlist playlist) {
+        followedPlaylists.add(playlist);
+        playlist.getFollowerUsers().add(this);
     }
 
-    public void setOwnedPlaylists(Set<Playlist> ownedPlaylists) {
-        this.ownedPlaylists = ownedPlaylists;
-    }
-
-    public Set<Playlist> getSubscribedToPlaylists() {
-        return subscribedToPlaylists;
-    }
-
-    public void setSubscribedToPlaylists(Set<Playlist> playlists) {
-        this.subscribedToPlaylists = playlists;
-    }
-
-    public void subscribeToPlaylist(Playlist playlist) {
-        subscribedToPlaylists.add(playlist);
-        playlist.getSubscribedUsers().add(this);
-    }
-
-    public void unsubscribeFromPlaylist(Playlist playlist) {
-        subscribedToPlaylists.remove(playlist);
-        playlist.getSubscribedUsers().remove(this);
+    public void removeFollowedPlaylist(Playlist playlist) {
+        followedPlaylists.remove(playlist);
+        playlist.getFollowerUsers().remove(this);
     }
 
     public void addOwnedPlaylist(Playlist playlist) {

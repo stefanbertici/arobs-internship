@@ -1,9 +1,14 @@
 package com.arobs.internship.musify.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "playlists")
 public class Playlist {
@@ -20,8 +25,8 @@ public class Playlist {
     @JoinColumn(name = "owner_user_id")
     private User ownerUser;
 
-    @ManyToMany(mappedBy = "subscribedToPlaylists")
-    private Set<User> subscribedUsers = new HashSet<>();
+    @ManyToMany(mappedBy = "followedPlaylists")
+    private Set<User> followerUsers = new HashSet<>();
 
     @ManyToMany()
     @JoinTable(name = "playlists_songs",
@@ -30,84 +35,8 @@ public class Playlist {
     @OrderColumn(name = "song_order")
     private List<Song> songsInPlaylist = new ArrayList<>();
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public User getOwnerUser() {
-        return ownerUser;
-    }
-
-    public void setOwnerUser(User ownerUser) {
-        this.ownerUser = ownerUser;
-    }
-
     public Integer getOwnerUserId() {
         return ownerUser.getId();
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public Set<User> getSubscribedUsers() {
-        return subscribedUsers;
-    }
-
-    public void setSubscribedUsers(Set<User> users) {
-        this.subscribedUsers = users;
-    }
-
-    public List<Song> getSongsInPlaylist() {
-        return songsInPlaylist;
-    }
-
-    public void setSongsInPlaylist(List<Song> songsInPlaylist) {
-        this.songsInPlaylist = songsInPlaylist;
-    }
-
-    public void addOwnerUser(User user) {
-        ownerUser = user;
-        user.getOwnedPlaylists().add(this);
-    }
-
-    public void removeOwnerUser(User user) {
-        ownerUser = null;
-        user.getOwnedPlaylists().remove(this);
-    }
-
-    public void addSubscribedUser(User user) {
-        subscribedUsers.add(user);
-        user.getSubscribedToPlaylists().add(this);
-    }
-
-    public void removeSubscribedUser(User user) {
-        subscribedUsers.remove(user);
-        user.getSubscribedToPlaylists().remove(this);
     }
 
     public void addSong(Song song) {
@@ -120,7 +49,9 @@ public class Playlist {
     }
 
     public void removeSong(Song song) {
-        songsInPlaylist.remove(song);
-        song.getPlaylists().remove(this);
+        if(songsInPlaylist.contains(song)){
+            songsInPlaylist.remove(song);
+            song.getPlaylists().remove(this);
+        }
     }
 }

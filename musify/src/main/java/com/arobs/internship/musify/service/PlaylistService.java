@@ -35,7 +35,7 @@ public class PlaylistService {
         User user = repositoryChecker.getCurrentUser();
 
         Set<Playlist> ownedPlaylists = user.getOwnedPlaylists();
-        Set<Playlist> followedPlaylists = user.getSubscribedToPlaylists();
+        Set<Playlist> followedPlaylists = user.getFollowedPlaylists();
 
         List<PlaylistDTO> result = ownedPlaylists
                 .stream()
@@ -66,14 +66,14 @@ public class PlaylistService {
             throw new IllegalArgumentException("Playlist type must be \"private\" or \"public\"");
         }
 
-        Playlist playlist = playlistMapper.toEntity(playlistDTO);
         User user = repositoryChecker.getCurrentUser();
 
-        playlist = playlistRepository.save(playlist);
-
+        Playlist playlist = playlistMapper.toEntity(playlistDTO);
         playlist.setCreatedDate(Date.valueOf(LocalDate.now()));
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
-        playlist.setOwnerUser(user);
+        playlist = playlistRepository.save(playlist);
+
+        user.addOwnedPlaylist(playlist);
 
         return playlistMapper.toDto(playlist);
     }
@@ -105,8 +105,10 @@ public class PlaylistService {
             throw new UnauthorizedException("You can't modify playlists you do not own");
         }
 
-        playlist.addSong(song);
-        playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
+        if (!playlist.getSongsInPlaylist().contains(song)) {
+            playlist.addSong(song);
+            playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
+        }
 
         return playlistMapper.toViewDto(playlist);
     }
@@ -120,8 +122,10 @@ public class PlaylistService {
             throw new UnauthorizedException("You can't modify playlists you do not own");
         }
 
-        playlist.removeSong(song);
-        playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
+        if (playlist.getSongsInPlaylist().contains(song)) {
+            playlist.removeSong(song);
+            playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
+        }
 
         return playlistMapper.toViewDto(playlist);
     }
@@ -198,7 +202,7 @@ public class PlaylistService {
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
                 .orElseThrow(() -> new UnauthorizedException("You need to log in"));
 
-        if (playlist.getSubscribedUsers().contains(user)) {
+        if (playlist.getFollowerUsers().contains(user)) {
             throw new UnauthorizedException("You already follow this playlist");
         }
 
@@ -210,7 +214,7 @@ public class PlaylistService {
             throw new UnauthorizedException("You cannot follow your own playlist");
         }
 
-        user.subscribeToPlaylist(playlist);
+        user.addFollowedPlaylist(playlist);
 
         return "Successfully followed";
     }
@@ -222,11 +226,11 @@ public class PlaylistService {
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
                 .orElseThrow(() -> new UnauthorizedException("You need to log in"));
 
-        if (!playlist.getSubscribedUsers().contains(user)) {
+        if (!playlist.getFollowerUsers().contains(user)) {
             throw new UnauthorizedException("You have not followed this playlist");
         }
 
-        user.unsubscribeFromPlaylist(playlist);
+        user.removeFollowedPlaylist(playlist);
 
         return "Successfully unfollowed";
     }

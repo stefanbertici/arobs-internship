@@ -1,3 +1,4 @@
+/*
 package com.arobs.internship.storage.hibernate;
 
 import org.hibernate.SessionFactory;
@@ -42,4 +43,4 @@ public class HibernateUtil {
             StandardServiceRegistryBuilder.destroy(registry);
         }
     }
-}
+}*/

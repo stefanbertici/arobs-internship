@@ -1,3 +1,4 @@
+/*
 package com.arobs.internship.storage.hibernate;
 
 import com.arobs.internship.musify.dto.BandDTO;
@@ -133,3 +134,4 @@ public class HibernateBandRepository {
         }
     }
 }
+*/

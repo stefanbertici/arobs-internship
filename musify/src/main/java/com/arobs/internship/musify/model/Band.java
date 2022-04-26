@@ -1,16 +1,22 @@
 package com.arobs.internship.musify.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// for base hibernate operations
+/* for base hibernate operations, not used in the latest version of this project
 @NamedQueries({
         @NamedQuery(name = "findAllBands", query = "from Band"),
         @NamedQuery(name = "findBandById", query = "from Band where id = :id")
-})
+})*/
+@Getter
+@Setter
 @Entity
 @Table(name = "bands")
 public class Band{
@@ -25,59 +31,14 @@ public class Band{
     @Column(name = "activity_end_date")
     private String activityEndDate;
 
-    @ManyToMany(mappedBy = "bands")
+    @ManyToMany
+    @JoinTable(name = "bands_artists",
+            joinColumns = { @JoinColumn(name = "band_id") },
+            inverseJoinColumns = { @JoinColumn(name = "artist_id") })
     private Set<Artist> artists = new HashSet<>();
 
     @OneToMany(mappedBy = "band")
     private Set<Album> bandAlbums = new HashSet<>();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getBandName() {
-        return bandName;
-    }
-
-    public void setBandName(String bandName) {
-        this.bandName = bandName;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getActivityStartDate() {
-        return activityStartDate;
-    }
-
-    public void setActivityStartDate(String activityStartDate) {
-        this.activityStartDate = activityStartDate;
-    }
-
-    public String getActivityEndDate() {
-        return activityEndDate;
-    }
-
-    public void setActivityEndDate(String activityEndDate) {
-        this.activityEndDate = activityEndDate;
-    }
-
-    public Set<Artist> getArtists() {
-        return artists;
-    }
-
-    public void setArtists(Set<Artist> artists) {
-        this.artists = artists;
-    }
 
     public List<Integer> getArtistsIds() {
         List<Integer> ids = new ArrayList<>();
@@ -86,14 +47,6 @@ public class Band{
         }
 
         return ids;
-    }
-
-    public Set<Album> getBandAlbums() {
-        return bandAlbums;
-    }
-
-    public void setBandAlbums(Set<Album> bandAlbums) {
-        this.bandAlbums = bandAlbums;
     }
 
     public void addArtist(Artist artist) {
