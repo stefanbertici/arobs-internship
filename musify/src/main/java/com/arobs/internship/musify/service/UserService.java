@@ -11,7 +11,7 @@ import com.arobs.internship.musify.security.InMemoryTokenBlacklist;
 import com.arobs.internship.musify.security.JwtUtils;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +22,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService {
     private final RepositoryChecker repositoryChecker;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final InMemoryTokenBlacklist inMemoryTokenBlacklist;
-
-    @Autowired
-    public UserService(RepositoryChecker repositoryChecker, UserRepository userRepository, UserMapper userMapper, InMemoryTokenBlacklist inMemoryTokenBlacklist) {
-        this.repositoryChecker = repositoryChecker;
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.inMemoryTokenBlacklist = inMemoryTokenBlacklist;
-    }
 
     @Transactional
     public List<UserViewDTO> readAllUsers() {

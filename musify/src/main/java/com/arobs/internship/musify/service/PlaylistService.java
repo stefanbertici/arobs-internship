@@ -11,7 +11,7 @@ import com.arobs.internship.musify.repository.*;
 import com.arobs.internship.musify.security.JwtUtils;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,21 +22,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class PlaylistService {
     private final RepositoryChecker repositoryChecker;
     private final PlaylistRepository playlistRepository;
     private final UserRepository userRepository;
     private final PlaylistMapper playlistMapper;
     private final SongMapper songMapper;
-
-    @Autowired
-    public PlaylistService(RepositoryChecker repositoryChecker, PlaylistRepository playlistRepository, UserRepository userRepository, PlaylistMapper playlistMapper, SongMapper songMapper) {
-        this.repositoryChecker = repositoryChecker;
-        this.playlistRepository = playlistRepository;
-        this.userRepository = userRepository;
-        this.playlistMapper = playlistMapper;
-        this.songMapper = songMapper;
-    }
 
     @Transactional
     public List<PlaylistDTO> readUserPlaylists() {

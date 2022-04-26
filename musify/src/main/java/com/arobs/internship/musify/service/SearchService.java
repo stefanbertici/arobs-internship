@@ -9,11 +9,12 @@ import com.arobs.internship.musify.repository.AlbumRepository;
 import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.repository.SongRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class SearchService {
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
@@ -23,18 +24,6 @@ public class SearchService {
     private final BandMapper bandMapper;
     private final SongMapper songMapper;
     private final AlbumMapper albumMapper;
-
-    @Autowired
-    public SearchService(AlbumRepository albumRepository, SongRepository songRepository, ArtistRepository artistRepository, BandRepository bandRepository, ArtistMapper artistMapper, BandMapper bandMapper, SongMapper songMapper, AlbumMapper albumMapper) {
-        this.albumRepository = albumRepository;
-        this.songRepository = songRepository;
-        this.artistRepository = artistRepository;
-        this.bandRepository = bandRepository;
-        this.artistMapper = artistMapper;
-        this.bandMapper = bandMapper;
-        this.songMapper = songMapper;
-        this.albumMapper = albumMapper;
-    }
 
     @Transactional
     public SearchViewDTO search(String searchTerm) {

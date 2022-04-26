@@ -12,31 +12,22 @@ import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class BandService {
     private final RepositoryChecker repositoryChecker;
     private final BandRepository bandRepository;
     private final ArtistRepository artistRepository;
     private final BandMapper bandMapper;
     private final AlbumMapper albumMapper;
-
-    @Autowired
-    public BandService(RepositoryChecker repositoryChecker, BandRepository bandRepository, BandMapper bandMapper, ArtistRepository artistRepository, AlbumMapper albumMapper) {
-        this.repositoryChecker = repositoryChecker;
-        this.bandRepository = bandRepository;
-        this.artistRepository = artistRepository;
-        this.bandMapper = bandMapper;
-        this.albumMapper = albumMapper;
-    }
 
     @Transactional
     public List<AlbumDTO> readAlbumsByBandId(Integer id) {

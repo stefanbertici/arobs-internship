@@ -13,29 +13,20 @@ import com.arobs.internship.musify.repository.AlbumRepository;
 import com.arobs.internship.musify.repository.SongRepository;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AlbumService {
     private final RepositoryChecker repositoryChecker;
     private final AlbumRepository albumRepository;
     private final SongRepository songRepository;
     private final AlbumMapper albumMapper;
     private final SongMapper songMapper;
-
-    @Autowired
-    public AlbumService(RepositoryChecker repositoryChecker, AlbumRepository albumRepository, AlbumMapper albumMapper, SongRepository songRepository, SongMapper songMapper) {
-        this.repositoryChecker = repositoryChecker;
-        this.albumRepository = albumRepository;
-        this.songRepository = songRepository;
-        this.albumMapper = albumMapper;
-        this.songMapper = songMapper;
-    }
 
     @Transactional
     public List<SongViewDTO> readSongsByAlbumId(Integer id) {

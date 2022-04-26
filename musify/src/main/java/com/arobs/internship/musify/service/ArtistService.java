@@ -10,29 +10,20 @@ import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ArtistService {
     private final RepositoryChecker repositoryChecker;
     private final ArtistRepository artistRepository;
     private final ArtistMapper artistMapper;
     private final AlbumMapper albumMapper;
-
-    @Autowired
-    public ArtistService(RepositoryChecker repositoryChecker, ArtistRepository artistRepository, ArtistMapper artistMapper, AlbumMapper albumMapper) {
-        this.repositoryChecker = repositoryChecker;
-        this.artistRepository = artistRepository;
-        this.artistMapper = artistMapper;
-        this.albumMapper = albumMapper;
-    }
 
     @Transactional
     public List<AlbumDTO> readAlbumsByArtistId(Integer id) {

@@ -3,7 +3,7 @@ package com.arobs.internship.musify.controller;
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.ArtistDTO;
 import com.arobs.internship.musify.service.ArtistService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +12,9 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class ArtistController {
     private final ArtistService artistService;
-
-    @Autowired
-    public ArtistController(ArtistService artistService) {
-        this.artistService = artistService;
-    }
 
     @GetMapping("/artist/{id}/albums")
     public ResponseEntity<List<AlbumDTO>> readAlbumsByArtistId(@PathVariable Integer id) {

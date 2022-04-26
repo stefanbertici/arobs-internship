@@ -4,7 +4,7 @@ import com.arobs.internship.musify.dto.PlaylistDTO;
 import com.arobs.internship.musify.dto.PlaylistViewDTO;
 import com.arobs.internship.musify.dto.SongViewDTO;
 import com.arobs.internship.musify.service.PlaylistService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +13,9 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 public class PlaylistController {
     private final PlaylistService playlistService;
-
-    @Autowired
-    public PlaylistController(PlaylistService playlistService) {
-        this.playlistService = playlistService;
-    }
 
     @GetMapping("/playlists")
     public ResponseEntity<List<PlaylistDTO>> readUserPlaylists() {

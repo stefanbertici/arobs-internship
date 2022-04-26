@@ -8,29 +8,19 @@ import com.arobs.internship.musify.repository.*;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-//@AllArgsConstructor
+@AllArgsConstructor
 public class SongService {
     private final RepositoryChecker repositoryChecker;
     private final SongRepository songRepository;
     private final ArtistRepository artistRepository;
     private final AlternativeSongTitleRepository alternativeSongTitleRepository;
     private final SongMapper songMapper;
-
-    @Autowired
-    public SongService(RepositoryChecker repositoryChecker, SongRepository songRepository, SongMapper songMapper, ArtistRepository artistRepository, AlternativeSongTitleRepository alternativeSongTitleRepository) {
-        this.repositoryChecker = repositoryChecker;
-        this.songRepository = songRepository;
-        this.artistRepository = artistRepository;
-        this.alternativeSongTitleRepository = alternativeSongTitleRepository;
-        this.songMapper = songMapper;
-    }
 
     @Transactional
     public SongDTO createSong(SongDTO songDTO) {
