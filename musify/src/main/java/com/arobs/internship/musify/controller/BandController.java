@@ -2,7 +2,9 @@ package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.BandDTO;
+import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.service.BandService;
+import com.arobs.internship.musify.utils.UserChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,19 @@ public class BandController {
 
     @PostMapping("/band")
     public ResponseEntity<BandDTO> createBand(@RequestBody @Valid BandDTO bandDTO) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
+            throw new UnauthorizedException("Only admins can create new bands");
+        }
+
         return new ResponseEntity<>(bandService.createBand(bandDTO), HttpStatus.OK);
     }
 
     @PutMapping("/band/{id}")
     public ResponseEntity<BandDTO> updateBand(@PathVariable Integer id, @RequestBody @Valid BandDTO bandDTO) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
+            throw new UnauthorizedException("Only admins can update bands");
+        }
+
         return new ResponseEntity<>(bandService.updateBand(id, bandDTO), HttpStatus.OK);
     }
 }

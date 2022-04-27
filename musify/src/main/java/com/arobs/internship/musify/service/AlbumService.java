@@ -2,7 +2,6 @@ package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.SongViewDTO;
-import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.AlbumMapper;
 import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.Album;
@@ -12,7 +11,6 @@ import com.arobs.internship.musify.model.Song;
 import com.arobs.internship.musify.repository.AlbumRepository;
 import com.arobs.internship.musify.repository.SongRepository;
 import com.arobs.internship.musify.utils.RepositoryChecker;
-import com.arobs.internship.musify.utils.UserChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +36,6 @@ public class AlbumService {
 
     @Transactional
     public AlbumDTO createAlbum(AlbumDTO albumDTO) {
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can create new albums");
-        }
-
         if (!albumDTO.isOnlyOneOwnerIdSet()) {
             throw new IllegalArgumentException("One of artist id or band id must be set, the other must remain null");
         }
@@ -60,10 +54,6 @@ public class AlbumService {
 
     @Transactional
     public AlbumDTO updateAlbum(Integer id, AlbumDTO albumDTO) {
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can update albums");
-        }
-
         if (!albumDTO.isOnlyOneOwnerIdSet()) {
             throw new IllegalArgumentException("One of artist id or band id must be set, the other must remain null");
         }
@@ -102,20 +92,15 @@ public class AlbumService {
         album.getSongs().clear();
     }
 
-    // TODO clean up if works
     private void addArtistOrBandById(Album album, AlbumDTO albumDTO) {
         if (albumDTO.getArtistId() != null && albumDTO.getArtistId() != 0) {
             Integer id = albumDTO.getArtistId();
             Artist artist = repositoryChecker.getArtistIfExists(id);
             artist.addAlbum(album);
-            //album.setArtist(artist);
-            //album.setBand(null);
         } else if (albumDTO.getBandId() != null && albumDTO.getBandId() != 0) {
             Integer id = albumDTO.getBandId();
             Band band = repositoryChecker.getBandIfExists(id);
             band.addAlbum(album);
-            //album.setBand(band);
-            //album.setArtist(null);
         }
     }
 }

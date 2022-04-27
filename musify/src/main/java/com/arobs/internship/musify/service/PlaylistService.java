@@ -55,9 +55,7 @@ public class PlaylistService {
             throw new UnauthorizedException("You cannot view this private playlist");
         }
 
-        List<Song> songs = playlist.getSongsInPlaylist();
-
-        return songMapper.toViewDtos(songs);
+        return songMapper.toViewDtos(playlist.getSongsInPlaylist());
     }
 
     @Transactional

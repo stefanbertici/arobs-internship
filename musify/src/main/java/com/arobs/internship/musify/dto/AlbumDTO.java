@@ -31,7 +31,6 @@ public class AlbumDTO {
         boolean artistSet, bandSet;
 
         artistSet = artistId != null && artistId != 0;
-
         bandSet = bandId != null && bandId != 0;
 
         return (artistSet && !bandSet) || (!artistSet && bandSet);

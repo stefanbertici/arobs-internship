@@ -1,12 +1,10 @@
 package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.SongDTO;
-import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.SongMapper;
 import com.arobs.internship.musify.model.*;
 import com.arobs.internship.musify.repository.*;
 import com.arobs.internship.musify.utils.RepositoryChecker;
-import com.arobs.internship.musify.utils.UserChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,10 +22,6 @@ public class SongService {
 
     @Transactional
     public SongDTO createSong(SongDTO songDTO) {
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can create new songs");
-        }
-
         Song song = songMapper.toEntity(songDTO);
         song = songRepository.save(song);
 
@@ -44,10 +38,6 @@ public class SongService {
 
     @Transactional
     public SongDTO updateSong(Integer id, SongDTO songDTO) {
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can update songs");
-        }
-
         Song song = repositoryChecker.getSongIfExists(id);
 
         song.setTitle(songDTO.getTitle());

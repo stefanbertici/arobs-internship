@@ -110,10 +110,6 @@ public class UserService {
     public UserViewDTO updateUserRole(Integer id, String operation) {
         String newRole = "";
 
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can modify user roles");
-        }
-
         if (operation.equals("PROMOTE")) {
             newRole = "admin";
         } else if (operation.equals("DEMOTE")) {
@@ -129,10 +125,6 @@ public class UserService {
     @Transactional
     public UserViewDTO updateUserStatus(Integer id, String operation) {
         String newStatus = "";
-
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can modify user statuses");
-        }
 
         if (operation.equals("ACTIVATE")) {
             newStatus = "active";

@@ -2,16 +2,13 @@ package com.arobs.internship.musify.service;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.BandDTO;
-import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.mapper.AlbumMapper;
 import com.arobs.internship.musify.mapper.BandMapper;
-import com.arobs.internship.musify.model.Album;
 import com.arobs.internship.musify.model.Artist;
 import com.arobs.internship.musify.model.Band;
 import com.arobs.internship.musify.repository.ArtistRepository;
 import com.arobs.internship.musify.repository.BandRepository;
 import com.arobs.internship.musify.utils.RepositoryChecker;
-import com.arobs.internship.musify.utils.UserChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,17 +30,11 @@ public class BandService {
     public List<AlbumDTO> readAlbumsByBandId(Integer id) {
         Band band = repositoryChecker.getBandIfExists(id);
 
-        List<Album> albums = new ArrayList<>(band.getBandAlbums());
-
-        return albumMapper.toDtos(albums);
+        return albumMapper.toDtos(new ArrayList<>(band.getBandAlbums()));
     }
 
     @Transactional
     public BandDTO createBand(BandDTO bandDTO) {
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can create new bands");
-        }
-
         Band band = bandMapper.toEntity(bandDTO);
         band = bandRepository.save(band);
 
@@ -56,10 +47,6 @@ public class BandService {
 
     @Transactional
     public BandDTO updateBand(Integer id, BandDTO bandDTO) {
-        if (UserChecker.isCurrentUserNotAdmin()) {
-            throw new UnauthorizedException("Only admins can update bands");
-        }
-
         Band band = repositoryChecker.getBandIfExists(id);
 
         band.setBandName(bandDTO.getBandName());

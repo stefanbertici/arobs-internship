@@ -2,7 +2,9 @@ package com.arobs.internship.musify.controller;
 
 import com.arobs.internship.musify.dto.AlbumDTO;
 import com.arobs.internship.musify.dto.SongViewDTO;
+import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.service.AlbumService;
+import com.arobs.internship.musify.utils.UserChecker;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,19 @@ public class AlbumController {
 
     @PostMapping("/album")
     public ResponseEntity<AlbumDTO> createAlbum(@RequestBody @Valid AlbumDTO albumDTO) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
+            throw new UnauthorizedException("Only admins can create new albums");
+        }
+
         return new ResponseEntity<>(albumService.createAlbum(albumDTO), HttpStatus.OK);
     }
 
     @PutMapping("/album/{id}")
     public ResponseEntity<AlbumDTO> updateAlbum(@PathVariable Integer id, @RequestBody @Valid AlbumDTO albumDTO) {
+        if (UserChecker.isCurrentUserNotAdmin()) {
+            throw new UnauthorizedException("Only admins can update albums");
+        }
+
         return new ResponseEntity<>(albumService.updateAlbum(id, albumDTO), HttpStatus.OK);
     }
 }
