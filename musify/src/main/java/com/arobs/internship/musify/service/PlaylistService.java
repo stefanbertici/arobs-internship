@@ -188,6 +188,13 @@ public class PlaylistService {
         }
 
         user.removeOwnedPlaylist(playlist);
+
+        Set<User> followers = playlist.getFollowerUsers();
+        for (User follower : followers) {
+            follower.getFollowedPlaylists().remove(playlist);
+            userRepository.save(follower);
+        }
+
         playlistRepository.delete(playlist);
 
         return "Playlist successfully deleted";
