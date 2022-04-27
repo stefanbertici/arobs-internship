@@ -11,6 +11,8 @@ import com.arobs.internship.musify.security.InMemoryTokenBlacklist;
 import com.arobs.internship.musify.security.JwtUtils;
 import com.arobs.internship.musify.utils.RepositoryChecker;
 import com.arobs.internship.musify.utils.UserChecker;
+import com.arobs.internship.musify.utils.UserRole;
+import com.arobs.internship.musify.utils.UserStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,12 +109,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserViewDTO updateUserRole(Integer id, String operation) {
+    public UserViewDTO updateUserRole(Integer id, UserRole role) {
         String newRole = "";
 
-        if (operation.equals("PROMOTE")) {
+        if (role == UserRole.ADMIN) {
             newRole = "admin";
-        } else if (operation.equals("DEMOTE")) {
+        } else if (role == UserRole.USER) {
             newRole = "user";
         }
 
@@ -123,12 +125,12 @@ public class UserService {
     }
 
     @Transactional
-    public UserViewDTO updateUserStatus(Integer id, String operation) {
+    public UserViewDTO updateUserStatus(Integer id, UserStatus status) {
         String newStatus = "";
 
-        if (operation.equals("ACTIVATE")) {
+        if (status == UserStatus.ACTIVE) {
             newStatus = "active";
-        } else if (operation.equals("DEACTIVATE")) {
+        } else if (status == UserStatus.INACTIVE) {
             newStatus = "inactive";
         }
 

@@ -6,6 +6,8 @@ import com.arobs.internship.musify.dto.UserViewDTO;
 import com.arobs.internship.musify.exception.UnauthorizedException;
 import com.arobs.internship.musify.service.UserService;
 import com.arobs.internship.musify.utils.UserChecker;
+import com.arobs.internship.musify.utils.UserRole;
+import com.arobs.internship.musify.utils.UserStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +63,7 @@ public class UserController {
             throw new UnauthorizedException("Only admins can modify user roles");
         }
 
-        UserViewDTO user = userService.updateUserRole(id, "PROMOTE");
+        UserViewDTO user = userService.updateUserRole(id, UserRole.ADMIN);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -71,7 +73,7 @@ public class UserController {
             throw new UnauthorizedException("Only admins can modify user roles");
         }
 
-        UserViewDTO user = userService.updateUserRole(id, "DEMOTE");
+        UserViewDTO user = userService.updateUserRole(id, UserRole.USER);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -81,7 +83,7 @@ public class UserController {
             throw new UnauthorizedException("Only admins can modify user statuses");
         }
 
-        UserViewDTO user = userService.updateUserStatus(id, "ACTIVATE");
+        UserViewDTO user = userService.updateUserStatus(id, UserStatus.ACTIVE);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
@@ -91,7 +93,7 @@ public class UserController {
             throw new UnauthorizedException("Only admins can modify user statuses");
         }
 
-        UserViewDTO user = userService.updateUserStatus(id, "DEACTIVATE");
+        UserViewDTO user = userService.updateUserStatus(id, UserStatus.INACTIVE);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
