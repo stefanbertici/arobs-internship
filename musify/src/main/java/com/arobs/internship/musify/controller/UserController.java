@@ -44,6 +44,11 @@ public class UserController {
         String token = userService.loginUser(userLoginDTO);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
+
+    @GetMapping("/user/403")
+    public ResponseEntity<String> unauthenticated() {
+        return new ResponseEntity<>("Please log in first", HttpStatus.UNAUTHORIZED);
+    }
     
     @PostMapping("/user/logout")
     public ResponseEntity<String> logoutUser(@RequestHeader(name = "Authorization") String header) {

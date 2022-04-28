@@ -7,9 +7,6 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication
 public class MusifyApplication {
@@ -17,10 +14,10 @@ public class MusifyApplication {
         SpringApplication.run(MusifyApplication.class, args);
     }
 
-    @Bean
+    /*@Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
-    }
+    }*/
 
     @Bean
     public OpenAPI customOpenAPI() {
