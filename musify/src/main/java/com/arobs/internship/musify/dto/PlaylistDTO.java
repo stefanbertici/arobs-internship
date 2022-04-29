@@ -15,6 +15,8 @@ import java.sql.Date;
 @AllArgsConstructor
 public class PlaylistDTO {
     private Integer id;
+    @NotBlank(message = "Name cannot be blank")
+    private String name;
     @NotBlank(message = "Type cannot be blank")
     private String type;
     private Date createdDate;

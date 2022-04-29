@@ -88,6 +88,7 @@ public class PlaylistService {
             throw new UnauthorizedException("You can't modify playlists you do not own");
         }
 
+        playlist.setName(playlistDTO.getName());
         playlist.setType(playlistDTO.getType());
         playlist.setUpdatedDate(Date.valueOf(LocalDate.now()));
 

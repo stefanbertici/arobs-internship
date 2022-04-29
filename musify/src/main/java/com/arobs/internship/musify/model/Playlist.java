@@ -15,7 +15,7 @@ public class Playlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    // TODO playlist name
+    private String name;
     private String type;
     @Column(name = "created_date")
     private Date createdDate;
