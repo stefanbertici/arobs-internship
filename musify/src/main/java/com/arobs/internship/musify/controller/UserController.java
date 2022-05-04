@@ -16,53 +16,54 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
 @AllArgsConstructor
+@RestController
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/")
     public ResponseEntity<List<UserViewDTO>> readAllUsers() {
         List<UserViewDTO> users = userService.readAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserViewDTO> readUserById(@PathVariable Integer id) {
         UserViewDTO user = userService.readUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("/register")
     public ResponseEntity<UserViewDTO> createUser(@RequestBody @Valid UserDTO userDTO) {
         UserViewDTO user = userService.registerUser(userDTO);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         String token = userService.loginUser(userLoginDTO);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-    @GetMapping("/user/403")
+    @GetMapping("/403")
     public ResponseEntity<String> unauthenticated() {
         return new ResponseEntity<>("Please log in first", HttpStatus.UNAUTHORIZED);
     }
     
-    @PostMapping("/user/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logoutUser(@RequestHeader(name = "Authorization") String header) {
         String response = userService.logoutUser(header);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserViewDTO> updateUser(@PathVariable Integer id, @RequestBody @Valid UserDTO userDTO) {
         UserViewDTO user = userService.updateUser(id, userDTO);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}/promote")
+    @PutMapping("/{id}/promote")
     public ResponseEntity<UserViewDTO> promoteUser(@PathVariable Integer id) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can modify user roles");
@@ -72,7 +73,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}/demote")
+    @PutMapping("/{id}/demote")
     public ResponseEntity<UserViewDTO> demoteUser(@PathVariable Integer id) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can modify user roles");
@@ -82,7 +83,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}/activate")
+    @PutMapping("/{id}/activate")
     public ResponseEntity<UserViewDTO> activateUser(@PathVariable Integer id) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can modify user statuses");
@@ -92,7 +93,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/user/{id}/deactivate")
+    @PutMapping("/{id}/deactivate")
     public ResponseEntity<UserViewDTO> deactivateUser(@PathVariable Integer id) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can modify user statuses");

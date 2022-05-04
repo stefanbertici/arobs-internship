@@ -13,26 +13,27 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
 @AllArgsConstructor
+@RestController
+@RequestMapping("/band")
 public class BandController {
     private final BandService bandService;
 
-    @GetMapping("/band/{id}/albums")
+    @GetMapping("/{id}/albums")
     public ResponseEntity<List<AlbumDTO>> readAlbumsByBandId(@PathVariable Integer id) {
         return new ResponseEntity<>(bandService.readAlbumsByBandId(id), HttpStatus.OK);
     }
 
-    @PostMapping("/band")
+    @PostMapping("/")
     public ResponseEntity<BandDTO> createBand(@RequestBody @Valid BandDTO bandDTO) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new bands");
         }
 
-        return new ResponseEntity<>(bandService.createBand(bandDTO), HttpStatus.OK);
+        return new ResponseEntity<>(bandService.createBand(bandDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/band/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<BandDTO> updateBand(@PathVariable Integer id, @RequestBody @Valid BandDTO bandDTO) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update bands");

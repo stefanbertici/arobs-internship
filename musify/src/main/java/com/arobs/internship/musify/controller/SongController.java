@@ -11,21 +11,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
 @AllArgsConstructor
+@RestController
+@RequestMapping("/song")
 public class SongController {
     private final SongService songService;
 
-    @PostMapping("/song")
+    @PostMapping("/")
     public ResponseEntity<SongDTO> createSong(@RequestBody @Valid SongDTO songDTO) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can create new songs");
         }
 
-        return new ResponseEntity<>(songService.createSong(songDTO), HttpStatus.OK);
+        return new ResponseEntity<>(songService.createSong(songDTO), HttpStatus.CREATED);
     }
 
-    @PutMapping("/song/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<SongDTO> updateSong(@PathVariable Integer id, @RequestBody @Valid SongDTO songDTO) {
         if (UserChecker.isCurrentUserNotAdmin()) {
             throw new UnauthorizedException("Only admins can update songs");
