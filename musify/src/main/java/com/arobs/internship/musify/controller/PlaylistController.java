@@ -38,7 +38,7 @@ public class PlaylistController {
     }
 
     @DeleteMapping("/playlist/{id}")
-    public ResponseEntity<String> deletePlaylist(@PathVariable Integer id) {
+    public ResponseEntity<PlaylistDTO> deletePlaylist(@PathVariable Integer id) {
         return new ResponseEntity<>(playlistService.deletePlaylist(id), HttpStatus.OK);
     }
 
@@ -63,12 +63,12 @@ public class PlaylistController {
     }
 
     @PostMapping("/playlist/{id}/follow")
-    public ResponseEntity<String> followPlaylist(@PathVariable Integer id) {
+    public ResponseEntity<PlaylistDTO> followPlaylist(@PathVariable Integer id) {
         return new ResponseEntity<>(playlistService.followPlaylist(id), HttpStatus.OK);
     }
 
     @PostMapping("/playlist/{id}/unfollow")
-    public ResponseEntity<String> unfollowPlaylist(@PathVariable Integer id) {
+    public ResponseEntity<PlaylistDTO> unfollowPlaylist(@PathVariable Integer id) {
         return new ResponseEntity<>(playlistService.unfollowPlaylist(id), HttpStatus.OK);
     }
 }

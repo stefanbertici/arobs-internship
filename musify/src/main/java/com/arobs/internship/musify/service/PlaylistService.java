@@ -179,7 +179,7 @@ public class PlaylistService {
     }
 
     @Transactional
-    public String deletePlaylist(Integer id) {
+    public PlaylistDTO deletePlaylist(Integer id) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(id);
 
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
@@ -199,11 +199,11 @@ public class PlaylistService {
 
         playlistRepository.delete(playlist);
 
-        return "Playlist successfully deleted";
+        return playlistMapper.toDto(playlist);
     }
 
     @Transactional
-    public String followPlaylist(Integer id) {
+    public PlaylistDTO followPlaylist(Integer id) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(id);
 
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
@@ -223,11 +223,11 @@ public class PlaylistService {
 
         user.addFollowedPlaylist(playlist);
 
-        return "Successfully followed";
+        return playlistMapper.toDto(playlist);
     }
 
     @Transactional
-    public String unfollowPlaylist(Integer id) {
+    public PlaylistDTO unfollowPlaylist(Integer id) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(id);
 
         User user = userRepository.findById(JwtUtils.getCurrentUserId())
@@ -239,6 +239,6 @@ public class PlaylistService {
 
         user.removeFollowedPlaylist(playlist);
 
-        return "Successfully unfollowed";
+        return playlistMapper.toDto(playlist);
     }
 }
