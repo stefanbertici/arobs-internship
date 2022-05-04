@@ -31,7 +31,7 @@ public class SearchService {
         searchViewDTO.setArtists(artistMapper.toDtos(artistRepository.findAllByStageNameContainingIgnoreCase(searchTerm)));
         searchViewDTO.setBands(bandMapper.toDtos(bandRepository.findAllByBandNameContainingIgnoreCase(searchTerm)));
         searchViewDTO.setAlbums(albumMapper.toDtos(albumRepository.findAllByTitleContainingIgnoreCase(searchTerm)));
-        searchViewDTO.setSongs(songMapper.toViewDtos(songRepository.findAllByTitleContainingIgnoreCase(searchTerm)));
+        searchViewDTO.setSongs(songMapper.toViewDtos(songRepository.findAllByTitleAndAlternativeTitles(searchTerm)));
 
         return searchViewDTO;
     }
