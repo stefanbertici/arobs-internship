@@ -150,6 +150,7 @@ public class PlaylistService {
         return playlistMapper.toViewDto(playlist);
     }
 
+    @Transactional
     public PlaylistViewDTO changeSongOrder(Integer playlistId, Integer songId, Integer oldPosition, Integer newPosition) {
         Playlist playlist = repositoryChecker.getPlaylistIfExists(playlistId);
         Song song = repositoryChecker.getSongIfExists(songId);
