@@ -1,5 +1,3 @@
-# arobs-internship
-
 This repository contains all of the exercise problems that I have worked on in the first 4 weeks of the internship programme and the graduation project itself, "Musify", which I have worked on in the latter half of the programme.
 
 Musify is a service for listening to music. We have implemented the administrative part of it, not the streaming itself.
